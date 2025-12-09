@@ -14,6 +14,7 @@
     "lucide-vue-next": "^0.474.0",
     "mapbox-gl": "^3.9.2",
     "nuxt": "^4.2.1",
+    "nuxt-mapbox": "^1.6.4",
     "pinia": "^3.0.1",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3"

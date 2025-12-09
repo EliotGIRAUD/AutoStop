@@ -5,12 +5,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: '.',
   pages: true,
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-mapbox'],
   css: [resolve('./assets/css/tailwind.css')],
   runtimeConfig: {
     public: {
-      mapboxToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN || ''
+      mapboxToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN
     }
+  },
+  mapbox: {
+    accessToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN || ''
   },
   app: {
     head: {
