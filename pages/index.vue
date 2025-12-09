@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import usersData from '@/data/users.json'
   
   type RiderRole = 'Driver' | 'Hitchhiker'
@@ -24,17 +24,29 @@
   }
   
   const users = usersData as User[]
+  const mapCenter = ref<[number, number]>([0.62, 44.205])
   
   const config = useRuntimeConfig()
   
   const driverCount = computed(() => users.filter(user => user.role === 'Driver').length)
   const hitchhikerCount = computed(() => users.filter(user => user.role === 'Hitchhiker').length)
   const availableCount = computed(() => users.filter(user => user.availability).length)
-  const mapOptions = {
+  const mapOptions = computed(() => ({
     style: 'mapbox://styles/mranderson741/cmiynfmfw000301s5hnesemfa',
-    center: [0.62, 44.205],
+    center: mapCenter.value,
     zoom: 10.3
-  }
+  }))
+
+  onMounted(() => {
+    if (!navigator?.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        mapCenter.value = [position.coords.longitude, position.coords.latitude]
+      },
+      () => {},
+      { enableHighAccuracy: true, maximumAge: 60000, timeout: 8000 }
+    )
+  })
   </script>
   
   <template>
@@ -68,6 +80,7 @@
               class="h-[calc(100vh-theme(spacing.16))] w-full"
               :options="mapOptions"
             >
+              <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
               <MapboxMarker
                 v-for="user in users"
                 :key="user.id"
