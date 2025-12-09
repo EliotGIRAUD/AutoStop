@@ -1,0 +1,53 @@
+[
+  {
+    "id": "r1",
+    "userId": "1",
+    "role": "Driver",
+    "origin": "Saint-Clar",
+    "destination": "Auch",
+    "status": "confirmed",
+    "time": "07:30",
+    "seats": 2
+  },
+  {
+    "id": "r2",
+    "userId": "1",
+    "role": "Driver",
+    "origin": "Auch",
+    "destination": "Saint-Clar",
+    "status": "pending",
+    "time": "18:10",
+    "seats": 2
+  },
+  {
+    "id": "r3",
+    "userId": "2",
+    "role": "Hitchhiker",
+    "origin": "Castéra-Verduzan",
+    "destination": "Agen",
+    "status": "pending",
+    "time": "08:15",
+    "seats": 1
+  },
+  {
+    "id": "r4",
+    "userId": "3",
+    "role": "Driver",
+    "origin": "Valence-sur-Baïse",
+    "destination": "Condom",
+    "status": "completed",
+    "time": "12:00",
+    "seats": 1
+  },
+  {
+    "id": "r5",
+    "userId": "4",
+    "role": "Hitchhiker",
+    "origin": "Lectoure",
+    "destination": "Fleurance",
+    "status": "confirmed",
+    "time": "09:45",
+    "seats": 1
+  }
+]
+

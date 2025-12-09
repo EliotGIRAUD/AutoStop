@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1",
+    "name": "Amadou Diop",
+    "role": "Driver",
+    "bio": "Agriculteur qui propose des trajets matin et soir.",
+    "location": { "lat": 44.205, "lng": 0.62 },
+    "destination": "Auch",
+    "vehicle": "Peugeot Partner",
+    "availability": true,
+    "rating": 4.8,
+    "languages": ["Français", "Peul"],
+    "ridesCompleted": 124
+  },
+  {
+    "id": "2",
+    "name": "Léa Martin",
+    "role": "Hitchhiker",
+    "bio": "Étudiante infirmière en stage dans les communes voisines.",
+    "location": { "lat": 44.145, "lng": 0.812 },
+    "destination": "Agen",
+    "vehicle": "",
+    "availability": true,
+    "rating": 4.6,
+    "languages": ["Français", "Anglais"],
+    "ridesCompleted": 56
+  },
+  {
+    "id": "3",
+    "name": "Jean-Claude Perez",
+    "role": "Driver",
+    "bio": "Artisan menuisier qui circule entre les villages.",
+    "location": { "lat": 44.265, "lng": 0.452 },
+    "destination": "Condom",
+    "vehicle": "Renault Kangoo",
+    "availability": false,
+    "rating": 4.7,
+    "languages": ["Français", "Espagnol"],
+    "ridesCompleted": 98
+  },
+  {
+    "id": "4",
+    "name": "Mariam Traoré",
+    "role": "Hitchhiker",
+    "bio": "Bénévole associative pour les actions locales.",
+    "location": { "lat": 44.085, "lng": 0.54 },
+    "destination": "Lectoure",
+    "vehicle": "",
+    "availability": true,
+    "rating": 4.9,
+    "languages": ["Français", "Bambara"],
+    "ridesCompleted": 72
+  }
+]
+
