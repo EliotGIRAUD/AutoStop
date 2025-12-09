@@ -10,10 +10,32 @@ const router = useRouter()
 
 const role = ref<RiderRole>(auth.role)
 const phone = ref('')
+const firstName = ref('')
+const lastName = ref('')
+const age = ref<number | null>(null)
+const photo = ref('')
 
 const handleSubmit = () => {
   auth.setRole(role.value)
+  auth.setProfile({
+    firstName: firstName.value,
+    lastName: lastName.value,
+    age: age.value,
+    photo: photo.value,
+    phone: phone.value
+  })
   router.push('/dashboard')
+}
+
+const handlePhotoChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file || !file.type.startsWith('image/')) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    photo.value = reader.result as string
+  }
+  reader.readAsDataURL(file)
 }
 </script>
 
@@ -51,6 +73,55 @@ const handleSubmit = () => {
         >
           Auto-stoppeur
         </button>
+      </div>
+
+      <div class="space-y-2">
+        <label for="firstName" class="text-sm font-semibold text-slate-200">Prénom</label>
+        <input
+          id="firstName"
+          v-model="firstName"
+          type="text"
+          placeholder="Jean"
+          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="lastName" class="text-sm font-semibold text-slate-200">Nom</label>
+        <input
+          id="lastName"
+          v-model="lastName"
+          type="text"
+          placeholder="Dupont"
+          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="age" class="text-sm font-semibold text-slate-200">Âge</label>
+        <input
+          id="age"
+          v-model.number="age"
+          type="number"
+          min="16"
+          max="99"
+          placeholder="30"
+          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="photo" class="text-sm font-semibold text-slate-200">Photo de profil</label>
+        <input
+          id="photo"
+          type="file"
+          accept="image/*"
+          @change="handlePhotoChange"
+          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white file:mr-4 file:rounded-xl file:border-0 file:bg-slate-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white focus:border-emerald-400 focus:outline-none"
+        />
+        <div v-if="photo" class="overflow-hidden rounded-2xl border border-white/10 bg-slate-800">
+          <img :src="photo" alt="Prévisualisation" class="h-24 w-full object-cover" />
+        </div>
       </div>
 
       <div class="space-y-2">

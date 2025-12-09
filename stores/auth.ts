@@ -16,13 +16,32 @@ interface Ride {
   seats: number
 }
 
+interface Profile {
+  firstName: string
+  lastName: string
+  age: number | null
+  photo: string
+  phone: string
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const role = ref<RiderRole>('Hitchhiker')
   const availability = ref(true)
   const rides = ref<Ride[]>(ridesData as Ride[])
+  const profile = ref<Profile>({
+    firstName: '',
+    lastName: '',
+    age: null,
+    photo: '',
+    phone: ''
+  })
 
   const setRole = (value: RiderRole) => {
     role.value = value
+  }
+
+  const setProfile = (data: Partial<Profile>) => {
+    profile.value = { ...profile.value, ...data }
   }
 
   const toggleAvailability = () => {
@@ -33,7 +52,9 @@ export const useAuthStore = defineStore('auth', () => {
     role,
     availability,
     rides,
+    profile,
     setRole,
+    setProfile,
     toggleAvailability
   }
 })
