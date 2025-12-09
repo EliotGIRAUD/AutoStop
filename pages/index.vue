@@ -174,17 +174,17 @@ onMounted(() => {
                   </div>
                 </MapboxPopup>
               </MapboxMarker>
+              <button
+                type="button"
+                class="absolute bottom-4 right-4 rounded-full bg-white/90 p-3 shadow-lg ring-1 ring-slate-200 transition hover:shadow-xl focus:outline-none"
+                @click="locate"
+              >
+                <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v2m0 8v2m6-6h-2M8 12H6m9 0a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
             </MapboxMap>
-            <button
-              type="button"
-              class="absolute bottom-4 right-4 rounded-full bg-white/90 p-3 shadow-lg ring-1 ring-slate-200 transition hover:shadow-xl focus:outline-none"
-              @click="locate"
-            >
-              <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v2m0 8v2m6-6h-2M8 12H6m9 0a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </button>
-            <div v-else class="p-6 text-center text-slate-300">
+            <div v-if="!config.public.mapboxToken" class="p-6 text-center text-slate-300">
               Ajouter un jeton Mapbox public dans NUXT_PUBLIC_MAPBOX_TOKEN.
             </div>
           </div>
