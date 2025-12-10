@@ -115,7 +115,6 @@ onMounted(() => {
 
 <template>
   <section class="space-y-6">
-    <pre>cum</pre>
     <div>
       <ClientOnly>
         <div class="relative h-[calc(100dvh-64px)] w-full overflow-hidden border border-white/10 bg-slate-900">
