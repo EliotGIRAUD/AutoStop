@@ -11,6 +11,7 @@ interface NavItem {
 
 const route = useRoute();
 const isMapPage = computed(() => route.path === "/");
+const isOnboarding = computed(() => route.path.startsWith("/onboarding"));
 
 const navItems: NavItem[] = [
   { label: "Carte", to: "/", icon: MapPinned },
@@ -35,7 +36,7 @@ const isActive = (path: string) => {
         <slot />
       </div>
     </div>
-    <nav class="fixed bottom-0 left-0 right-0 h-16 border-t border-white/10 bg-slate-900/90 backdrop-blur">
+    <nav v-if="!isOnboarding" class="fixed bottom-0 left-0 right-0 h-16 border-t border-white/10 bg-slate-900/90 backdrop-blur">
       <div class="mx-auto flex h-full max-w-screen-lg items-center justify-between px-6">
         <NuxtLink
           v-for="item in navItems"
