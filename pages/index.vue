@@ -115,6 +115,7 @@ onMounted(() => {
 
 <template>
   <section class="space-y-6">
+    <pre>cum</pre>
     <div>
       <header class="space-y-2">
         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">PICKY</p>
@@ -286,4 +287,3 @@ onMounted(() => {
     </div>
   </section>
 </template>
-
