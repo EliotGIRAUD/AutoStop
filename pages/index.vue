@@ -120,16 +120,7 @@ onMounted(() => {
         <div class="relative h-[calc(100dvh-64px)] w-full overflow-hidden border border-white/10 bg-slate-900">
           <MapboxMap v-if="config.public.mapboxToken" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
             <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
-            <MapboxDefaultMarker v-if="currentPosition" marker-id="current-position" :lnglat="currentPosition" :options="{ anchor: 'center' }">
-              <template #marker>
-                <div class="relative flex h-10 w-10 items-center justify-center">
-                  <span class="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-emerald-400/30" />
-                  <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-white/60">
-                    <span class="h-2 w-2 rounded-full bg-white" />
-                  </span>
-                </div>
-              </template>
-            </MapboxDefaultMarker>
+
             <MapboxDefaultMarker
               v-for="user in filteredUsers"
               :key="user.id"
