@@ -37,6 +37,7 @@ const destinationCoords = ref<[number, number] | null>(null);
 const suggestions = ref<{ label: string; coords: [number, number] }[]>([]);
 const isLoadingSuggestions = ref(false);
 const routeGeojson = ref<any | null>(null);
+const activeDestination = ref<{ label: string; coords: [number, number] } | null>(null);
 
 const config = useRuntimeConfig();
 const mapRef = useMapboxRef("main-map");
@@ -146,6 +147,7 @@ const selectSuggestion = (item: { label: string; coords: [number, number] }) => 
 const submitDestination = async () => {
   const label = destination.value.trim();
   if (!label || !destinationCoords.value || !config.public.mapboxToken) return;
+  activeDestination.value = { label, coords: destinationCoords.value };
   const from = currentPosition.value ?? mapCenter.value;
   const to = destinationCoords.value;
   try {
@@ -174,6 +176,17 @@ const submitDestination = async () => {
     console.error("Directions error", error);
   }
   showDestinations.value = false;
+};
+
+const cancelRide = () => {
+  activeDestination.value = null;
+  routeGeojson.value = null;
+};
+
+const newRideFromHere = () => {
+  if (!activeDestination.value) return;
+  locate();
+  submitDestination();
 };
 
 onMounted(() => {
@@ -315,6 +328,40 @@ onMounted(() => {
             >
               Faire du stop
             </button>
+            <Transition name="fade">
+              <div
+                v-if="activeDestination"
+                class="absolute bottom-24 left-1/2 z-20 w-[min(90vw,480px)] -translate-x-1/2 transform rounded-2xl bg-white/95 p-4 text-slate-900 shadow-2xl ring-1 ring-slate-200 backdrop-blur"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="space-y-1">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Trajet actif</p>
+                    <p class="text-sm font-semibold text-slate-900">{{ activeDestination.label }}</p>
+                    <p class="text-xs text-slate-500">Depuis {{ departure || "Ma position" }}</p>
+                  </div>
+                  <button
+                    type="button"
+                    class="rounded-full bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+                    @click="cancelRide"
+                    aria-label="Fermer"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div class="mt-3 flex gap-3">
+                  <button type="button" class="flex-1 rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-300" @click="cancelRide">
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                    @click="newRideFromHere"
+                  >
+                    Nouveau départ
+                  </button>
+                </div>
+              </div>
+            </Transition>
             <Transition name="fade">
               <div
                 v-if="showDestinations"
