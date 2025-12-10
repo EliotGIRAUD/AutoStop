@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from '#imports'
+import { useRoute, useRouter } from '#imports'
 import usersData from '@/data/users.json'
 import ridesData from '@/data/rides.json'
 
@@ -33,16 +33,35 @@ interface Ride {
 }
 
 const route = useRoute()
+const router = useRouter()
 const users = usersData as User[]
 const rides = ridesData as Ride[]
 
 const userId = computed(() => String(route.params.id))
 const currentUser = computed(() => users.find(user => user.id === userId.value))
 const userRides = computed(() => rides.filter(ride => ride.userId === userId.value))
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push('/')
+  }
+}
 </script>
 
 <template>
   <section v-if="currentUser" class="space-y-6">
+    <div class="flex items-center justify-between">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 ring-1 ring-white/10 transition hover:bg-slate-700 focus:outline-none"
+        @click="goBack"
+      >
+        <span class="text-lg leading-none">←</span>
+        <span>Retour</span>
+      </button>
+    </div>
     <header class="space-y-3">
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">Profil public</p>
       <div class="flex items-start justify-between gap-4">

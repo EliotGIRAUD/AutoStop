@@ -17,7 +17,10 @@ const navItems: NavItem[] = [
   { label: 'Login', to: '/login', icon: LogIn }
 ]
 
-const isActive = (path: string) => route.path.startsWith(path)
+const isActive = (path: string) => {
+  if (path === '/') return route.path === '/'
+  return route.path === path || route.path.startsWith(`${path}/`)
+}
 </script>
 
 <template>
