@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { Component } from "vue";
 import { LayoutDashboard, LogIn, MapPinned, UserRound } from "lucide-vue-next";
 
@@ -9,6 +10,7 @@ interface NavItem {
 }
 
 const route = useRoute();
+const isMapPage = computed(() => route.path === "/");
 
 const navItems: NavItem[] = [
   { label: "Carte", to: "/", icon: MapPinned },
@@ -29,7 +31,9 @@ const isActive = (path: string) => {
       class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(8,145,178,0.08),transparent_32%)]"
     />
     <div class="relative flex-1 overflow-hidden">
-      <slot />
+      <div :class="isMapPage ? 'h-full' : 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 pt-6'">
+        <slot />
+      </div>
     </div>
     <nav class="fixed bottom-0 left-0 right-0 h-16 border-t border-white/10 bg-slate-900/90 backdrop-blur">
       <div class="mx-auto flex h-full max-w-screen-lg items-center justify-between px-6">
