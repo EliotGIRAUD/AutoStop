@@ -32,6 +32,7 @@ const mapCenter = ref<[number, number]>([6.1294, 45.8992]);
 const currentPosition = ref<[number, number] | null>(null);
 const departure = ref("");
 const destination = ref("");
+const activePopupId = ref<string | null>(null);
 const destinationCoords = ref<[number, number] | null>(null);
 const suggestions = ref<{ label: string; coords: [number, number] }[]>([]);
 const isLoadingSuggestions = ref(false);
@@ -84,6 +85,10 @@ const currentLocation = computed(() => {
   return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 });
 
+const closePopup = () => {
+  activePopupId.value = null;
+};
+
 const locate = () => {
   if (!navigator?.geolocation) return;
   navigator.geolocation.getCurrentPosition(
@@ -102,6 +107,7 @@ const openDestinationPanel = () => {
   locate();
   if (currentLocation.value) departure.value = "Ma position";
   showDestinations.value = true;
+  closePopup();
 };
 
 const fetchSuggestions = useDebounceFn(async (query: string) => {
@@ -190,19 +196,30 @@ onMounted(() => {
               :options="{ anchor: 'center' }"
             >
               <template #marker>
-                <div
-                  class="flex h-10 w-10 items-center justify-center rounded-full shadow-xl ring-2 transition hover:scale-110"
+                <button
+                  type="button"
+                  class="flex h-10 w-10 items-center justify-center rounded-full shadow-xl ring-2 transition hover:scale-110 focus:outline-none"
                   :class="user.role === 'Driver' ? 'bg-emerald-500 ring-emerald-200/60' : 'bg-cyan-500 ring-cyan-200/60'"
+                  @click="activePopupId = user.id"
                 >
-                  <div class="h-2 w-2 rounded-full bg-white"></div>
-                </div>
+                  <span class="h-2 w-2 rounded-full bg-white"></span>
+                </button>
               </template>
               <MapboxDefaultPopup
                 :popup-id="`popup-${user.id}`"
                 :lnglat="[user.location.lng, user.location.lat]"
                 :options="{ closeButton: false, closeOnMove: false, maxWidth: '320px', offset: [0, 12] }"
+                v-if="activePopupId === user.id"
               >
-                <div class="flex w-[260px] max-w-[300px] flex-col gap-3 rounded-2xl bg-white p-4 text-slate-900 shadow-xl ring-1 ring-slate-200/60">
+                <div class="flex w-[260px] max-w-[300px] flex-col gap-3 rounded-2xl">
+                  <button
+                    type="button"
+                    class="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus:outline-none"
+                    @click="closePopup"
+                    aria-label="Fermer"
+                  >
+                    <span class="text-lg leading-none">×</span>
+                  </button>
                   <div class="flex items-start gap-3">
                     <div
                       class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ring-2"
