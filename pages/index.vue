@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import { LngLatBounds } from "mapbox-gl";
+import { useDebounceFn } from "@vueuse/core";
 import usersData from "@/data/users.json";
 import { useAuthStore } from "@/stores/auth";
 
@@ -30,8 +32,13 @@ const mapCenter = ref<[number, number]>([6.1294, 45.8992]);
 const currentPosition = ref<[number, number] | null>(null);
 const departure = ref("");
 const destination = ref("");
+const destinationCoords = ref<[number, number] | null>(null);
+const suggestions = ref<{ label: string; coords: [number, number] }[]>([]);
+const isLoadingSuggestions = ref(false);
+const routeGeojson = ref<any | null>(null);
 
 const config = useRuntimeConfig();
+const mapRef = useMapboxRef("main-map");
 
 const driverCount = computed(() => users.filter((user) => user.role === "Driver").length);
 const hitchhikerCount = computed(() => users.filter((user) => user.role === "Hitchhiker").length);
@@ -84,7 +91,7 @@ const locate = () => {
       const coords: [number, number] = [position.coords.longitude, position.coords.latitude];
       currentPosition.value = coords;
       mapCenter.value = coords;
-      if (!departure.value) departure.value = `${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}`;
+      if (!departure.value) departure.value = "Ma position";
     },
     () => {},
     { enableHighAccuracy: true, maximumAge: 60000, timeout: 8000 }
@@ -93,19 +100,74 @@ const locate = () => {
 
 const openDestinationPanel = () => {
   locate();
-  if (currentLocation.value) departure.value = currentLocation.value;
+  if (currentLocation.value) departure.value = "Ma position";
   showDestinations.value = true;
 };
 
-const submitDestination = () => {
-  const to = destination.value.trim();
-  if (!to) return;
-  const from = departure.value.trim() || currentLocation.value || "Position actuelle";
-  // Placeholder action: replace with API call or store update as needed
-  console.info(`Demande de trajet créée`, { from, to });
+const fetchSuggestions = useDebounceFn(async (query: string) => {
+  suggestions.value = [];
+  destinationCoords.value = null;
+  if (!query || !config.public.mapboxToken) return;
+  isLoadingSuggestions.value = true;
+  try {
+    const proximity = (currentPosition.value ?? mapCenter.value).join(",");
+    const response = await $fetch<any>("https://api.mapbox.com/geocoding/v5/mapbox.places/" + encodeURIComponent(query) + ".json", {
+      params: {
+        access_token: config.public.mapboxToken,
+        proximity,
+        autocomplete: true,
+        language: "fr",
+        limit: 5,
+      },
+    });
+    suggestions.value = (response?.features ?? []).map((f: any) => ({
+      label: f.place_name,
+      coords: f.center as [number, number],
+    }));
+  } catch (error) {
+    console.error("Geocoding error", error);
+  } finally {
+    isLoadingSuggestions.value = false;
+  }
+}, 300);
+
+const selectSuggestion = (item: { label: string; coords: [number, number] }) => {
+  destination.value = item.label;
+  destinationCoords.value = item.coords;
+  suggestions.value = [];
+};
+
+const submitDestination = async () => {
+  const label = destination.value.trim();
+  if (!label || !destinationCoords.value || !config.public.mapboxToken) return;
+  const from = currentPosition.value ?? mapCenter.value;
+  const to = destinationCoords.value;
+  try {
+    const response = await $fetch<any>(`https://api.mapbox.com/directions/v5/mapbox/driving/${from.join(",")};${to.join(",")}`, {
+      params: {
+        geometries: "geojson",
+        overview: "full",
+        access_token: config.public.mapboxToken,
+      },
+    });
+    const route = response?.routes?.[0]?.geometry;
+    if (route) {
+      routeGeojson.value = {
+        type: "FeatureCollection",
+        features: [{ type: "Feature", geometry: route, properties: {} }],
+      };
+      if (Array.isArray(route.coordinates)) {
+        const bounds = new LngLatBounds();
+        route.coordinates.forEach((coord: [number, number]) => bounds.extend(coord));
+        mapRef.value?.fitBounds(bounds, { padding: 60, duration: 800 });
+      }
+    } else {
+      console.warn("No route found", response);
+    }
+  } catch (error) {
+    console.error("Directions error", error);
+  }
   showDestinations.value = false;
-  destination.value = "";
-  if (!currentLocation.value) departure.value = "";
 };
 
 onMounted(() => {
@@ -120,16 +182,6 @@ onMounted(() => {
         <div class="relative h-[calc(100dvh-64px)] w-full overflow-hidden border border-white/10 bg-slate-900">
           <MapboxMap v-if="config.public.mapboxToken" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
             <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
-            <MapboxDefaultMarker v-if="currentPosition" marker-id="current-position" :lnglat="currentPosition" :options="{ anchor: 'center' }">
-              <template #marker>
-                <div class="relative flex h-10 w-10 items-center justify-center">
-                  <span class="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-emerald-400/30" />
-                  <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-white/60">
-                    <span class="h-2 w-2 rounded-full bg-white" />
-                  </span>
-                </div>
-              </template>
-            </MapboxDefaultMarker>
             <MapboxDefaultMarker
               v-for="user in filteredUsers"
               :key="user.id"
@@ -217,6 +269,28 @@ onMounted(() => {
                 </div>
               </MapboxDefaultPopup>
             </MapboxDefaultMarker>
+            <MapboxDefaultMarker v-if="currentPosition" marker-id="current-position" :lnglat="currentPosition" :options="{ anchor: 'center' }">
+              <template #marker>
+                <div class="relative flex h-10 w-10 items-center justify-center">
+                  <span class="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-emerald-400/30" />
+                  <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-white/60">
+                    <span class="h-2 w-2 rounded-full bg-white" />
+                  </span>
+                </div>
+              </template>
+            </MapboxDefaultMarker>
+            <MapboxSource v-if="routeGeojson" source-id="route-source" :source="{ type: 'geojson', data: routeGeojson }">
+              <MapboxLayer
+                :layer="{
+                  id: 'route-line',
+                  type: 'line',
+                  source: 'route-source',
+                  paint: { 'line-color': '#10b981', 'line-width': 5, 'line-opacity': 0.8 },
+                  layout: { 'line-cap': 'round', 'line-join': 'round' },
+                }"
+              />
+            </MapboxSource>
+            <MapboxDefaultMarker v-if="destinationCoords" marker-id="selected-destination" :lnglat="destinationCoords" :options="{ anchor: 'bottom' }" />
             <button
               type="button"
               class="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 transform rounded-full bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg ring-1 ring-slate-200 transition hover:shadow-xl focus:outline-none"
@@ -236,7 +310,7 @@ onMounted(() => {
                       type="text"
                       v-model="departure"
                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-400 focus:ring focus:ring-emerald-100"
-                      :placeholder="currentLocation || 'Votre position actuelle...'"
+                      :placeholder="currentLocation ? 'Ma position' : 'Votre position actuelle...'"
                       :readonly="!!currentLocation"
                     />
                   </div>
@@ -248,7 +322,22 @@ onMounted(() => {
                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-cyan-400 focus:ring focus:ring-cyan-100"
                       placeholder="Où voulez-vous aller ? (ville ou direction)"
                       required
+                      @input="fetchSuggestions(destination)"
+                      @focus="destination && fetchSuggestions(destination)"
                     />
+                    <div v-if="suggestions.length || isLoadingSuggestions" class="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-white shadow-lg">
+                      <div v-if="isLoadingSuggestions" class="px-3 py-2 text-sm text-slate-500">Recherche...</div>
+                      <button
+                        v-for="item in suggestions"
+                        :key="item.label"
+                        type="button"
+                        class="block w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100"
+                        @click="selectSuggestion(item)"
+                      >
+                        {{ item.label }}
+                      </button>
+                      <div v-if="!isLoadingSuggestions && !suggestions.length" class="px-3 py-2 text-sm text-slate-500">Aucun résultat</div>
+                    </div>
                   </div>
                   <div class="flex gap-3">
                     <button type="submit" class="flex-1 rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-600">
