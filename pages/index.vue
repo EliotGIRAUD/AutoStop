@@ -116,6 +116,9 @@ onMounted(() => {
 <template>
   <section class="space-y-6">
     <div>
+      <img src="/logo.png" alt="PICKY" class="h-10 w-10" />
+    </div>
+    <div>
       <header class="space-y-2">
         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">PICKY</p>
         <h1 class="text-3xl font-bold leading-tight text-white">Connecter conducteurs et auto-stoppeurs.</h1>
