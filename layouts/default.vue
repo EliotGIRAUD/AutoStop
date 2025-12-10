@@ -1,36 +1,38 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-import { LayoutDashboard, LogIn, MapPinned, UserRound } from 'lucide-vue-next'
+import type { Component } from "vue";
+import { LayoutDashboard, LogIn, MapPinned, UserRound } from "lucide-vue-next";
 
 interface NavItem {
-  label: string
-  to: string
-  icon: Component
+  label: string;
+  to: string;
+  icon: Component;
 }
 
-const route = useRoute()
+const route = useRoute();
 
 const navItems: NavItem[] = [
-  { label: 'Carte', to: '/', icon: MapPinned },
-  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Profil', to: '/profile/1', icon: UserRound },
-  { label: 'Login', to: '/login', icon: LogIn }
-]
+  { label: "Carte", to: "/", icon: MapPinned },
+  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+  { label: "Profil", to: "/profile/1", icon: UserRound },
+  { label: "Login", to: "/login", icon: LogIn },
+];
 
 const isActive = (path: string) => {
-  if (path === '/') return route.path === '/'
-  return route.path === path || route.path.startsWith(`${path}/`)
-}
+  if (path === "/") return route.path === "/";
+  return route.path === path || route.path.startsWith(`${path}/`);
+};
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100">
-    <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(8,145,178,0.08),transparent_32%)]" />
-    <div class="relative mx-auto max-w-screen-md px-4 pb-24 pt-6">
+  <div class="flex min-h-dvh flex-col overflow-hidden bg-slate-950 text-slate-100">
+    <div
+      class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(8,145,178,0.08),transparent_32%)]"
+    />
+    <div class="relative flex-1 overflow-hidden">
       <slot />
     </div>
-    <nav class="fixed bottom-0 left-0 right-0 border-t border-white/10 bg-slate-900/90 backdrop-blur">
-      <div class="mx-auto flex max-w-screen-md items-center justify-between px-6 py-3">
+    <nav class="fixed bottom-0 left-0 right-0 h-16 border-t border-white/10 bg-slate-900/90 backdrop-blur">
+      <div class="mx-auto flex h-full max-w-screen-lg items-center justify-between px-6">
         <NuxtLink
           v-for="item in navItems"
           :key="item.to"
@@ -45,4 +47,3 @@ const isActive = (path: string) => {
     </nav>
   </div>
 </template>
-
