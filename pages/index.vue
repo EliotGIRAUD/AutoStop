@@ -37,6 +37,7 @@ const suggestions = ref<{ label: string; coords: [number, number] }[]>([]);
 const isLoadingSuggestions = ref(false);
 const routeGeojson = ref<any | null>(null);
 const activeDestination = ref<{ label: string; coords: [number, number] } | null>(null);
+const isPaused = ref(false);
 
 const config = useRuntimeConfig();
 const mapRef = useMapboxRef("main-map");
@@ -175,12 +176,23 @@ const submitDestination = async () => {
 const cancelRide = () => {
   activeDestination.value = null;
   routeGeojson.value = null;
+  isPaused.value = false;
 };
 
 const newRideFromHere = () => {
   if (!activeDestination.value) return;
   locate();
   submitDestination();
+};
+
+const togglePauseOrResume = () => {
+  if (!activeDestination.value) return;
+  if (isPaused.value) {
+    isPaused.value = false;
+    newRideFromHere();
+  } else {
+    isPaused.value = true;
+  }
 };
 
 onMounted(() => {
@@ -332,9 +344,9 @@ onMounted(() => {
                   <button
                     type="button"
                     class="flex-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
-                    @click="newRideFromHere"
+                    @click="togglePauseOrResume"
                   >
-                    Nouveau départ
+                    {{ isPaused ? "Reprendre" : "Pause" }}
                   </button>
                 </div>
               </div>
@@ -350,7 +362,7 @@ onMounted(() => {
                     <input
                       type="text"
                       v-model="departure"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-400 focus:ring focus:ring-emerald-100"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-400 focus:ring focus:ring-emerald-100"
                       :placeholder="currentLocation ? 'Ma position' : 'Votre position actuelle...'"
                       :readonly="!!currentLocation"
                     />
@@ -360,7 +372,7 @@ onMounted(() => {
                     <input
                       type="text"
                       v-model="destination"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-cyan-400 focus:ring focus:ring-cyan-100"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-cyan-400 focus:ring focus:ring-cyan-100"
                       placeholder="Où voulez-vous aller ? (ville ou direction)"
                       required
                       @input="fetchSuggestions(destination)"
