@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'AutoStop',
+      title: 'PICKY',
       meta: [
         {
           name: 'viewport',

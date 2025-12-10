@@ -67,7 +67,7 @@ onMounted(() => {
     <section class="space-y-6">
       <div>
         <header class="space-y-2">
-          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">AutoStop rural</p>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">PICKY</p>
           <h1 class="text-3xl font-bold leading-tight text-white">Connecter conducteurs et auto-stoppeurs.</h1>
           <p class="text-base text-slate-300">Carte temps réel, profils publics et disponibilités locales.</p>
           <div class="mt-4 grid grid-cols-3 gap-3 text-center text-sm font-semibold">
@@ -126,12 +126,9 @@ onMounted(() => {
                   </div>
                 </template>
                 <MapboxDefaultPopup :popup-id="`popup-${user.id}`" :lnglat="[user.location.lng, user.location.lat]">
-                  <div class="min-w-[200px] space-y-3 rounded-2xl bg-white p-4 shadow-xl">
+                  <div class="min-w-[200px] space-y-3 rounded-2xl">
                     <div class="flex items-start gap-3">
-                      <div
-                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ring-2"
-                        :class="user.role === 'Driver' ? 'bg-emerald-100 ring-emerald-300' : 'bg-cyan-100 ring-cyan-300'"
-                      >
+                      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ring-2" :class="user.role === 'Driver' ? 'bg-emerald-100 ring-emerald-300' : 'bg-cyan-100 ring-cyan-300'">
                         <span class="text-lg font-bold" :class="user.role === 'Driver' ? 'text-emerald-600' : 'text-cyan-600'">
                           {{ user.name.charAt(0).toUpperCase() }}
                         </span>

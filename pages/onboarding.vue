@@ -43,7 +43,7 @@ const skip = () => {
     <div class="flex items-center justify-between">
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">Bienvenue</p>
-        <h1 class="text-3xl font-bold text-white">Découvre AutoStop</h1>
+        <h1 class="text-3xl font-bold text-white">Découvre PICKY</h1>
         <p class="text-base text-slate-300">
           Carte temps réel pour connecter conducteurs et auto-stoppeurs. Quelques étapes pour démarrer.
         </p>
