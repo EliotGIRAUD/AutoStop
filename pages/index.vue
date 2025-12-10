@@ -117,29 +117,6 @@ onMounted(() => {
   <section class="space-y-6">
     <pre>cum</pre>
     <div>
-      <img src="/logo.png" alt="PICKY" class="h-10 w-10" />
-    </div>
-    <div>
-      <header class="space-y-2">
-        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">PICKY</p>
-        <h1 class="text-3xl font-bold leading-tight text-white">Connecter conducteurs et auto-stoppeurs.</h1>
-        <p class="text-base text-slate-300">Carte temps réel, profils publics et disponibilités locales.</p>
-        <div class="mt-4 grid grid-cols-3 gap-3 text-center text-sm font-semibold">
-          <div class="rounded-2xl bg-slate-900/70 px-3 py-3 ring-1 ring-white/10">
-            <p class="text-lg text-emerald-400">{{ driverCount }}</p>
-            <p class="text-slate-400">Conducteurs</p>
-          </div>
-          <div class="rounded-2xl bg-slate-900/70 px-3 py-3 ring-1 ring-white/10">
-            <p class="text-lg text-cyan-300">{{ hitchhikerCount }}</p>
-            <p class="text-slate-400">Auto-stoppeurs</p>
-          </div>
-          <div class="rounded-2xl bg-slate-900/70 px-3 py-3 ring-1 ring-white/10">
-            <p class="text-lg text-white">{{ availableCount }}</p>
-            <p class="text-slate-400">Disponibles</p>
-          </div>
-        </div>
-      </header>
-
       <ClientOnly>
         <div class="relative h-[calc(100dvh-64px)] w-full overflow-hidden border border-white/10 bg-slate-900">
           <MapboxMap v-if="config.public.mapboxToken" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
