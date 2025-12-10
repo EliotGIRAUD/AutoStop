@@ -145,8 +145,12 @@ onMounted(() => {
                   <div class="h-2 w-2 rounded-full bg-white"></div>
                 </div>
               </template>
-              <MapboxDefaultPopup :popup-id="`popup-${user.id}`" :lnglat="[user.location.lng, user.location.lat]">
-                <div class="min-w-[200px] space-y-3 rounded-2xl bg-white p-4 shadow-xl">
+              <MapboxDefaultPopup
+                :popup-id="`popup-${user.id}`"
+                :lnglat="[user.location.lng, user.location.lat]"
+                :options="{ closeButton: false, closeOnMove: false, maxWidth: '320px', offset: [0, 12] }"
+              >
+                <div class="flex w-[260px] max-w-[300px] flex-col gap-3 rounded-2xl bg-white p-4 text-slate-900 shadow-xl ring-1 ring-slate-200/60">
                   <div class="flex items-start gap-3">
                     <div
                       class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ring-2"
@@ -156,22 +160,24 @@ onMounted(() => {
                         {{ user.name.charAt(0).toUpperCase() }}
                       </span>
                     </div>
-                    <div class="min-w-0 flex-1">
-                      <h3 class="truncate text-base font-bold text-slate-900">{{ user.name }}</h3>
-                      <div class="mt-1 flex items-center gap-2">
-                        <span
-                          class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
-                          :class="user.role === 'Driver' ? 'bg-emerald-100 text-emerald-700' : 'bg-cyan-100 text-cyan-700'"
-                        >
-                          {{ user.role === "Driver" ? "Conducteur" : "Auto-stoppeur" }}
-                        </span>
-                        <div class="flex items-center gap-1">
-                          <svg class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                            />
-                          </svg>
-                          <span class="text-xs font-semibold text-slate-700">{{ user.rating }}</span>
+                    <div class="min-w-0 flex-1 space-y-2">
+                      <div>
+                        <h3 class="truncate text-base font-bold text-slate-900">{{ user.name }}</h3>
+                        <div class="mt-1 flex items-center gap-2">
+                          <span
+                            class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
+                            :class="user.role === 'Driver' ? 'bg-emerald-100 text-emerald-700' : 'bg-cyan-100 text-cyan-700'"
+                          >
+                            {{ user.role === "Driver" ? "Conducteur" : "Auto-stoppeur" }}
+                          </span>
+                          <div class="flex items-center gap-1">
+                            <svg class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                              />
+                            </svg>
+                            <span class="text-xs font-semibold text-slate-700">{{ user.rating }}</span>
+                          </div>
                         </div>
                       </div>
                       <div class="space-y-2 border-t border-slate-200 pt-3">
@@ -201,13 +207,13 @@ onMounted(() => {
                         </div>
                       </div>
                     </div>
-                    <NuxtLink
-                      :to="`/profile/${user.id}`"
-                      class="block w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none"
-                    >
-                      Voir le profil
-                    </NuxtLink>
                   </div>
+                  <NuxtLink
+                    :to="`/profile/${user.id}`"
+                    class="mt-1 block w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none"
+                  >
+                    Voir le profil
+                  </NuxtLink>
                 </div>
               </MapboxDefaultPopup>
             </MapboxDefaultMarker>
