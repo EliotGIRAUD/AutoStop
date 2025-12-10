@@ -95,27 +95,37 @@ onMounted(() => {
               :options="mapOptions"
             >
               <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
-              <MapboxMarker v-if="currentPosition" :lng-lat="currentPosition" anchor="center">
-                <div class="relative flex h-10 w-10 items-center justify-center">
-                  <span class="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-emerald-400/30" />
-                  <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-white/60">
-                    <span class="h-2 w-2 rounded-full bg-white" />
-                  </span>
-                </div>
-              </MapboxMarker>
-              <MapboxMarker
+              <MapboxDefaultMarker
+                v-if="currentPosition"
+                marker-id="current-position"
+                :lnglat="currentPosition"
+                :options="{ anchor: 'center' }"
+              >
+                <template #marker>
+                  <div class="relative flex h-10 w-10 items-center justify-center">
+                    <span class="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-emerald-400/30" />
+                    <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-white/60">
+                      <span class="h-2 w-2 rounded-full bg-white" />
+                    </span>
+                  </div>
+                </template>
+              </MapboxDefaultMarker>
+              <MapboxDefaultMarker
                 v-for="user in filteredUsers"
                 :key="user.id"
-                :lng-lat="[user.location.lng, user.location.lat]"
-                anchor="center"
+                :marker-id="`user-${user.id}`"
+                :lnglat="[user.location.lng, user.location.lat]"
+                :options="{ anchor: 'center' }"
               >
-                <div
-                  class="flex h-10 w-10 items-center justify-center rounded-full shadow-xl ring-2 transition hover:scale-110"
-                  :class="user.role === 'Driver' ? 'bg-emerald-500 ring-emerald-200/60' : 'bg-cyan-500 ring-cyan-200/60'"
-                >
-                  <div class="h-2 w-2 rounded-full bg-white"></div>
-                </div>
-                <MapboxPopup>
+                <template #marker>
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-full shadow-xl ring-2 transition hover:scale-110"
+                    :class="user.role === 'Driver' ? 'bg-emerald-500 ring-emerald-200/60' : 'bg-cyan-500 ring-cyan-200/60'"
+                  >
+                    <div class="h-2 w-2 rounded-full bg-white"></div>
+                  </div>
+                </template>
+                <MapboxDefaultPopup :popup-id="`popup-${user.id}`" :lnglat="[user.location.lng, user.location.lat]">
                   <div class="min-w-[200px] space-y-3 rounded-2xl bg-white p-4 shadow-xl">
                     <div class="flex items-start gap-3">
                       <div
@@ -172,8 +182,8 @@ onMounted(() => {
                       Voir le profil
                     </NuxtLink>
                   </div>
-                </MapboxPopup>
-              </MapboxMarker>
+                </MapboxDefaultPopup>
+              </MapboxDefaultMarker>
               <button
                 type="button"
                 class="absolute bottom-4 right-4 rounded-full bg-white/90 p-3 shadow-lg ring-1 ring-slate-200 transition hover:shadow-xl focus:outline-none"
