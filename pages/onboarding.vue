@@ -54,21 +54,21 @@ const skip = () => {
     <div class="relative mx-auto max-w-4xl space-y-8 px-4 sm:px-6">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="h-2 flex-1 rounded-full bg-slate-800">
-          <div class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all" :style="{ width: progressWidth }" />
+          <div class="h-full rounded-full bg-gradient-to-r from-primary-400 to-cyan-400 transition-all" :style="{ width: progressWidth }" />
         </div>
         <span class="text-xs font-semibold text-slate-400">{{ progressValue }} / {{ totalSteps }}</span>
       </div>
 
       <div v-if="showIntro" class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur sm:p-10">
         <div class="space-y-3 text-center">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">Bienvenue</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary-300">Bienvenue</p>
           <h1 class="text-3xl font-bold leading-tight text-white sm:text-4xl">Prêt(e) à rejoindre PICKY ?</h1>
           <p class="text-base text-slate-300 sm:text-lg">Une courte expérience pour configurer ton rôle, ta dispo et ton profil. Tu peux passer à tout moment.</p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             type="button"
-            class="w-full rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
+            class="w-full rounded-full bg-primary-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
             @click="startExperience"
           >
             Commencer l'expérience
@@ -97,8 +97,8 @@ const skip = () => {
           <div v-if="onboardingStep === 1" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button
               type="button"
-              class="w-full rounded-2xl border px-4 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/10"
-              :class="auth.role === 'Driver' ? 'border-emerald-400 bg-emerald-500/10 text-white' : 'border-white/10 bg-slate-800 text-slate-200'"
+              class="w-full rounded-2xl border px-4 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[0_12px_30px_rgba(235,93,31,0.1)]"
+              :class="auth.role === 'Driver' ? 'border-primary-400 bg-primary-500/10 text-white' : 'border-white/10 bg-slate-800 text-slate-200'"
               @click="auth.setRole('Driver')"
             >
               <p class="font-semibold">Conducteur</p>
@@ -120,7 +120,7 @@ const skip = () => {
             <div class="flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
-                class="flex-1 rounded-full bg-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110"
+                class="flex-1 rounded-full bg-primary-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110"
                 :class="auth.availability ? '' : 'opacity-80'"
                 @click="setAvailability(true)"
               >
@@ -145,7 +145,7 @@ const skip = () => {
                 <input
                   v-model="firstName"
                   type="text"
-                  class="w-full rounded-xl bg-slate-800 px-3 py-2 text-white ring-1 ring-white/10 focus:outline-none focus:ring-emerald-400"
+                  class="w-full rounded-xl bg-slate-800 px-3 py-2 text-white ring-1 ring-white/10 focus:outline-none focus:ring-primary-400"
                   placeholder="Alex"
                 />
               </div>
@@ -154,7 +154,7 @@ const skip = () => {
                 <input
                   v-model="lastName"
                   type="text"
-                  class="w-full rounded-xl bg-slate-800 px-3 py-2 text-white ring-1 ring-white/10 focus:outline-none focus:ring-emerald-400"
+                  class="w-full rounded-xl bg-slate-800 px-3 py-2 text-white ring-1 ring-white/10 focus:outline-none focus:ring-primary-400"
                   placeholder="Favre"
                 />
               </div>
@@ -166,7 +166,7 @@ const skip = () => {
           <p class="text-sm font-semibold text-white">Au programme</p>
           <ul class="mt-3 space-y-3 text-sm text-slate-300">
             <li class="flex items-start gap-2">
-              <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+              <span class="mt-1 h-2 w-2 rounded-full bg-primary-400" />
               <span>Active ta position pour voir qui est proche.</span>
             </li>
             <li class="flex items-start gap-2">
@@ -184,7 +184,7 @@ const skip = () => {
         <div class="lg:col-span-2">
           <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-2">
             <div class="flex items-center gap-2 text-sm text-slate-400">
-              <span v-for="n in 4" :key="n" class="h-2 w-2 rounded-full" :class="n - 1 === onboardingStep ? 'bg-emerald-400' : 'bg-slate-600'" />
+              <span v-for="n in 4" :key="n" class="h-2 w-2 rounded-full" :class="n - 1 === onboardingStep ? 'bg-primary-400' : 'bg-slate-600'" />
             </div>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <button
@@ -198,7 +198,7 @@ const skip = () => {
               <button
                 v-if="onboardingStep < 3"
                 type="button"
-                class="w-full rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
+                class="w-full rounded-full bg-primary-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
                 @click="nextStep"
               >
                 Continuer
@@ -206,7 +206,7 @@ const skip = () => {
               <button
                 v-else
                 type="button"
-                class="w-full rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
+                class="w-full rounded-full bg-primary-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
                 @click="complete"
               >
                 Terminer

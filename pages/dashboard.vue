@@ -43,7 +43,7 @@ const switchRole = (role: "Driver" | "Hitchhiker") => {
         <button
           type="button"
           class="flex-1 rounded-full px-4 py-3 text-base font-semibold shadow-[0_10px_26px_rgba(0,0,0,0.16)] ring-1 transition"
-          :class="auth.role === 'Hitchhiker' ? 'bg-orange-500 text-white ring-orange-300' : 'bg-white text-slate-900 ring-slate-200'"
+          :class="auth.role === 'Hitchhiker' ? 'bg-primary-500 text-white' : 'bg-white text-slate-900 ring-slate-200'"
           @click="switchRole('Hitchhiker')"
         >
           Passager
@@ -51,7 +51,7 @@ const switchRole = (role: "Driver" | "Hitchhiker") => {
         <button
           type="button"
           class="flex-1 rounded-full px-4 py-3 text-base font-semibold shadow-[0_10px_26px_rgba(0,0,0,0.12)] ring-1 transition"
-          :class="auth.role === 'Driver' ? 'bg-orange-500 text-white ring-orange-300' : 'bg-white text-slate-900 ring-slate-200'"
+          :class="auth.role === 'Driver' ? 'bg-primary-500 text-white' : 'bg-white text-slate-900 ring-slate-200'"
           @click="switchRole('Driver')"
         >
           Conducteur
