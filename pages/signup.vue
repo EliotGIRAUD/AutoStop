@@ -25,16 +25,17 @@ const handleSubmit = () => {
     age: null,
     photo: '',
     email: email.value.trim()
-  } as any)
+  })
+  auth.setAuthenticated(true)
   if (process.client) localStorage.setItem('onboardingCompleted', 'true')
   router.push('/dashboard')
 }
 </script>
 
 <template>
-  <section class="mx-auto flex min-h-dvh max-w-md flex-col gap-8 bg-white px-5 py-8 text-slate-900">
+  <section class="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-8 bg-white px-5 pb-12 pt-10 text-slate-900 sm:px-8">
     <div class="space-y-2 text-center">
-      <h1 class="text-2xl font-black leading-snug">Créez votre compte Picky facilement</h1>
+      <h1 class="text-2xl font-black leading-snug sm:text-3xl">Créez votre compte Picky facilement</h1>
     </div>
 
     <div class="space-y-4">
@@ -44,7 +45,7 @@ const handleSubmit = () => {
           v-model="fullName"
           type="text"
           placeholder="Nom & Prénom"
-          class="w-full rounded-xl border-2 border-orange-500/80 bg-white px-4 py-4 text-base font-semibold text-slate-900 placeholder:font-normal placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+          class="w-full rounded-xl border-2 border-[#EB5D1F]/80 bg-white px-4 py-4 text-base font-semibold text-slate-900 placeholder:font-normal placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
       </label>
 
@@ -54,7 +55,7 @@ const handleSubmit = () => {
           v-model="email"
           type="email"
           placeholder="Email"
-          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
       </label>
 
@@ -63,7 +64,7 @@ const handleSubmit = () => {
           <span class="sr-only">Indicatif</span>
           <select
             v-model="countryCode"
-            class="w-full rounded-xl border border-slate-200 bg-white px-3 py-4 text-base text-slate-900 focus:border-orange-500 focus:outline-none"
+            class="w-full rounded-xl border border-slate-200 bg-white px-3 py-4 text-base text-slate-900 focus:border-[#EB5D1F] focus:outline-none"
           >
             <option value="+33">🇫🇷 +33</option>
             <option value="+32">🇧🇪 +32</option>
@@ -76,7 +77,7 @@ const handleSubmit = () => {
             v-model="phone"
             type="tel"
             placeholder="Numéro de téléphone"
-            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
           />
         </label>
       </div>
@@ -85,7 +86,7 @@ const handleSubmit = () => {
         <span class="sr-only">Genre</span>
         <select
           v-model="gender"
-          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 focus:border-orange-500 focus:outline-none"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 focus:border-[#EB5D1F] focus:outline-none"
         >
           <option value="" disabled>Genre</option>
           <option value="F">Femme</option>
@@ -95,17 +96,16 @@ const handleSubmit = () => {
       </label>
 
       <label class="flex items-start gap-3 rounded-xl bg-white text-sm text-slate-700">
-        <input v-model="acceptTerms" type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-400" />
+        <input v-model="acceptTerms" type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-[#EB5D1F] focus:ring-[#EB5D1F]/60" />
         <span>
-          En vous inscrivant, vous acceptez les <a href="#" class="text-orange-500 underline">conditions d'utilisation</a> et la
-          <a href="#" class="text-orange-500 underline"> politique de confidentialité</a>.
+          En vous inscrivant, vous acceptez les <a href="#" class="text-[#EB5D1F] underline">conditions d'utilisation</a> et la
+          <a href="#" class="text-[#EB5D1F] underline"> politique de confidentialité</a>.
         </span>
       </label>
 
       <button
         type="button"
-        class="w-full rounded-full bg-orange-500 px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
-        :class="!acceptTerms ? 'opacity-80' : ''"
+        class="w-full rounded-full bg-[#EB5D1F] px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
         :disabled="!acceptTerms"
         @click="handleSubmit"
       >
@@ -144,7 +144,7 @@ const handleSubmit = () => {
 
       <p class="pt-2 text-center text-sm text-slate-700">
         Vous avez déjà un compte ?
-        <NuxtLink to="/login" class="font-semibold text-orange-500"> Connectez-vous.</NuxtLink>
+        <NuxtLink to="/login" class="font-semibold text-[#EB5D1F]"> Connectez-vous.</NuxtLink>
       </p>
     </div>
   </section>

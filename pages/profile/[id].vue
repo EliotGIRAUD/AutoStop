@@ -1,135 +1,196 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute, useRouter } from "#imports";
-import usersData from "@/data/users.json";
-import ridesData from "@/data/rides.json";
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from '#imports'
+import { useAuthStore } from '@/stores/auth'
 
-type RiderRole = "Driver" | "Hitchhiker";
-type RideStatus = "pending" | "confirmed" | "completed";
+const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
 
-interface User {
-  id: string;
-  name: string;
-  role: RiderRole;
-  bio: string;
-  location: { lat: number; lng: number };
-  destination: string;
-  vehicle?: string;
-  availability: boolean;
-  rating: number;
-  languages: string[];
-  ridesCompleted: number;
-}
-
-interface Ride {
-  id: string;
-  userId: string;
-  role: RiderRole;
-  origin: string;
-  destination: string;
-  status: RideStatus;
-  time: string;
-  seats: number;
-}
-
-const route = useRoute();
-const router = useRouter();
-const users = usersData as User[];
-const rides = ridesData as Ride[];
-
-const userId = computed(() => String(route.params.id));
-const currentUser = computed(() => users.find((user) => user.id === userId.value));
-const userRides = computed(() => rides.filter((ride) => ride.userId === userId.value));
+const fullName = ref('')
+const phone = ref('')
+const countryCode = ref('+33')
+const email = ref('')
+const address = ref('')
+const city = ref('')
+const gender = ref('')
+const photo = ref<string | null>(null)
+const verificationNotice = ref(false)
 
 const goBack = () => {
-  if (window.history.length > 1) {
-    router.back();
-  } else {
-    router.push("/");
+  if (process.client) {
+    const returnPath = localStorage.getItem('profileReturnPath') || '/profile'
+    localStorage.removeItem('profileReturnPath')
+    router.push(returnPath)
+    return
   }
-};
+  router.push('/profile')
+}
+
+const handlePhoto = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file || !file.type.startsWith('image/')) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    photo.value = reader.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
+const handleVerify = () => {
+  if (process.client) {
+    localStorage.setItem('profileReturnPath', route.fullPath)
+    localStorage.setItem('profileVerificationStatus', 'pending')
+  }
+  router.push('/profile/verify')
+}
+
+onMounted(() => {
+  const profile = (auth as any)?.profile ?? {}
+  const name = `${profile.firstName ?? ''} ${profile.lastName ?? ''}`.trim()
+  fullName.value = name || fullName.value
+  email.value = profile.email ?? ''
+  const phoneStr = profile.phone ?? ''
+  phone.value = phoneStr.replace(/^\+?\d+\s*/, '')
+  const codeMatch = phoneStr.match(/^\+?\d+/)
+  if (codeMatch) countryCode.value = codeMatch[0]
+  if (process.client) {
+    verificationNotice.value = localStorage.getItem('profileVerificationStatus') === 'pending'
+  }
+})
 </script>
 
 <template>
-  <section v-if="currentUser" class="space-y-6">
-    <div class="flex items-center justify-between">
-      <button
-        type="button"
-        class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 ring-1 ring-white/10 transition hover:bg-slate-700 focus:outline-none"
-        @click="goBack"
-      >
-        <span class="text-lg leading-none">←</span>
-        <span>Retour</span>
-      </button>
+  <section class="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-8 bg-white px-5 pb-12 pt-10 text-slate-900 sm:px-8">
+    <div class="text-center">
+      <h1 class="text-2xl font-black">Profil</h1>
     </div>
-    <header class="space-y-3">
-      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary-300">Profil public</p>
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h1 class="text-3xl font-bold text-white">{{ currentUser.name }}</h1>
-          <p class="text-base text-slate-300">{{ currentUser.bio }}</p>
-        </div>
-        <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="currentUser.role === 'Driver' ? 'bg-primary-500 text-slate-900' : 'bg-cyan-500 text-slate-900'">
-          {{ currentUser.role === "Driver" ? "Conducteur" : "Auto-stoppeur" }}
-        </span>
-      </div>
-    </header>
 
-    <div class="grid grid-cols-1 gap-4 rounded-3xl border border-white/10 bg-slate-900 p-6 sm:grid-cols-2">
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Destination</p>
-        <p class="text-lg font-semibold text-white">{{ currentUser.destination }}</p>
-      </div>
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Langues</p>
-        <p class="text-lg font-semibold text-white">{{ currentUser.languages.join(", ") }}</p>
-      </div>
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Trajets réalisés</p>
-        <p class="text-lg font-semibold text-white">{{ currentUser.ridesCompleted }}</p>
-      </div>
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Note moyenne</p>
-        <p class="text-lg font-semibold text-white">{{ currentUser.rating.toFixed(1) }}/5</p>
-      </div>
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Disponibilité</p>
-        <p
-          class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold"
-          :class="currentUser.availability ? 'bg-primary-500/20 text-primary-200 ring-1 ring-primary-400/40' : 'bg-slate-800 text-slate-300 ring-1 ring-white/10'"
+    <div
+      v-if="verificationNotice"
+      class="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700"
+    >
+      Profil en cours de vérification.
+    </div>
+
+    <div class="flex flex-col items-center gap-4">
+      <div class="relative h-36 w-36">
+        <div class="h-full w-full overflow-hidden rounded-full bg-slate-100">
+          <img v-if="photo" :src="photo" alt="Photo de profil" class="h-full w-full object-cover" />
+          <div v-else class="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_30%,#f2f2f2,#e5e5e5)]">
+            <img src="/profil/profile.svg" alt="Profil" class="h-12 w-12 object-contain opacity-60" />
+          </div>
+        </div>
+        <label
+          for="profilePhoto"
+          class="absolute -bottom-1 -right-1 flex h-12 w-12 items-center justify-center rounded-full bg-[#EB5D1F] text-white shadow-lg ring-4 ring-white transition hover:brightness-110"
         >
-          <span class="h-2 w-2 rounded-full" :class="currentUser.availability ? 'bg-primary-400' : 'bg-slate-500'" />
-          {{ currentUser.availability ? "Disponible" : "Non disponible" }}
-        </p>
-      </div>
-      <div class="space-y-2">
-        <p class="text-sm text-slate-400">Véhicule</p>
-        <p class="text-lg font-semibold text-white">
-          {{ currentUser.vehicle && currentUser.vehicle.length > 0 ? currentUser.vehicle : "Non renseigné" }}
-        </p>
+          <span class="text-xl">📷</span>
+          <input id="profilePhoto" type="file" accept="image/*" class="hidden" @change="handlePhoto" />
+        </label>
       </div>
     </div>
 
     <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold text-white">Trajets associés</h2>
-        <span class="text-sm text-slate-400">{{ userRides.length }} trajets</span>
-      </div>
-      <div class="space-y-3">
-        <div v-for="ride in userRides" :key="ride.id" class="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-900 px-4 py-3">
-          <div>
-            <p class="text-sm text-slate-400">{{ ride.origin }} → {{ ride.destination }}</p>
-            <p class="text-base font-semibold text-white">{{ ride.time }}</p>
-          </div>
-          <span
-            class="rounded-full px-3 py-1 text-xs font-semibold"
-            :class="ride.status === 'confirmed' ? 'bg-primary-500 text-slate-900' : ride.status === 'pending' ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-900'"
+      <label class="block">
+        <span class="sr-only">Nom & Prénom</span>
+        <input
+          v-model="fullName"
+          type="text"
+          placeholder="Nom & Prénom"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        />
+      </label>
+
+      <div class="flex gap-3">
+        <label class="w-20">
+          <span class="sr-only">Pays</span>
+          <select
+            v-model="countryCode"
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-4 text-base text-slate-900 focus:border-orange-500 focus:outline-none"
           >
-            {{ ride.status === "confirmed" ? "Confirmé" : ride.status === "pending" ? "En attente" : "Terminé" }}
-          </span>
-        </div>
+            <option value="+33">🇫🇷</option>
+            <option value="+32">🇧🇪</option>
+            <option value="+41">🇨🇭</option>
+          </select>
+        </label>
+        <label class="flex-1">
+          <span class="sr-only">Téléphone</span>
+          <input
+            v-model="phone"
+            type="tel"
+            placeholder="Numéro de téléphone"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+          />
+        </label>
       </div>
+
+      <label class="block">
+        <span class="sr-only">Email</span>
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        />
+      </label>
+
+      <label class="block">
+        <span class="sr-only">Adresse</span>
+        <input
+          v-model="address"
+          type="text"
+          placeholder="Adresse"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        />
+      </label>
+
+      <label class="block relative">
+        <span class="sr-only">Ville</span>
+        <select
+          v-model="city"
+          class="w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 focus:border-orange-500 focus:outline-none"
+        >
+          <option value="" disabled>Ville</option>
+          <option value="Annecy">Annecy</option>
+          <option value="Genève">Genève</option>
+          <option value="Lyon">Lyon</option>
+          <option value="Paris">Paris</option>
+        </select>
+        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500">⌄</span>
+      </label>
+
+      <label class="block relative">
+        <span class="sr-only">Genre</span>
+        <select
+          v-model="gender"
+          class="w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 py-4 text-base text-slate-900 focus:border-orange-500 focus:outline-none"
+        >
+          <option value="" disabled>Genre</option>
+          <option value="F">Femme</option>
+          <option value="M">Homme</option>
+          <option value="O">Autre / Préféré ne pas dire</option>
+        </select>
+        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500">⌄</span>
+      </label>
+    </div>
+
+    <div class="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-between">
+      <button
+        type="button"
+        class="w-full rounded-full border border-orange-500 px-6 py-3 text-base font-semibold text-orange-500 transition hover:bg-orange-50 sm:w-[45%]"
+        @click="goBack"
+      >
+        Retour
+      </button>
+      <button
+        type="button"
+        class="w-full rounded-full bg-orange-500 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:brightness-110 sm:w-[45%]"
+        @click="handleVerify"
+      >
+        Vérifier
+      </button>
     </div>
   </section>
-  <section v-else class="rounded-3xl border border-white/10 bg-slate-900 p-6 text-center text-slate-200">Profil introuvable.</section>
 </template>

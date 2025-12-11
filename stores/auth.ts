@@ -22,18 +22,21 @@ interface Profile {
   age: number | null
   photo: string
   phone: string
+  email: string
 }
 
 export const useAuthStore = defineStore('auth', () => {
   const role = ref<RiderRole>('Hitchhiker')
   const availability = ref(true)
   const rides = ref<Ride[]>(ridesData as Ride[])
+  const isAuthenticated = ref(false)
   const profile = ref<Profile>({
     firstName: '',
     lastName: '',
     age: null,
     photo: '',
-    phone: ''
+    phone: '',
+    email: ''
   })
 
   const setRole = (value: RiderRole) => {
@@ -44,6 +47,10 @@ export const useAuthStore = defineStore('auth', () => {
     profile.value = { ...profile.value, ...data }
   }
 
+  const setAuthenticated = (value: boolean) => {
+    isAuthenticated.value = value
+  }
+
   const toggleAvailability = () => {
     availability.value = !availability.value
   }
@@ -52,9 +59,11 @@ export const useAuthStore = defineStore('auth', () => {
     role,
     availability,
     rides,
+    isAuthenticated,
     profile,
     setRole,
     setProfile,
+    setAuthenticated,
     toggleAvailability
   }
 })

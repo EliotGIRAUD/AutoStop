@@ -15,7 +15,7 @@ const route = useRoute();
 const isMapPage = computed(() => route.path === "/");
 const isOnboarding = computed(() => route.path.startsWith("/onboarding"));
 
-const isLoggedIn = computed(() => Boolean(auth.profile.firstName));
+const isLoggedIn = computed(() => auth.isAuthenticated || Boolean(auth.profile.firstName));
 const showStatusSheet = ref(false);
 
 const navItems = computed<NavItem[]>(() => [
@@ -23,7 +23,7 @@ const navItems = computed<NavItem[]>(() => [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   {
     label: isLoggedIn.value ? "Profil" : "Login",
-    to: isLoggedIn.value ? "/profile/1" : "/login",
+    to: isLoggedIn.value ? "/profile" : "/login",
     icon: isLoggedIn.value ? UserRound : LogIn,
   },
 ]);
