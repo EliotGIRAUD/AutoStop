@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { Bell, ChevronDown } from "lucide-vue-next";
 import { LngLatBounds } from "mapbox-gl";
 import { useDebounceFn } from "@vueuse/core";
 import usersData from "@/data/users.json";
@@ -58,6 +59,7 @@ const mapOptions = computed(() => ({
 }));
 
 const showDestinations = ref(false);
+const showRoleMenu = ref(false);
 
 const destinationIdeas = computed(() => {
   const counts = new Map<
@@ -87,6 +89,8 @@ const currentLocation = computed(() => {
   return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 });
 
+const roleLabel = computed(() => (auth.role === "Driver" ? "Conducteur" : "Passager"));
+
 const closePopup = () => {
   activePopupId.value = null;
 };
@@ -110,6 +114,15 @@ const openDestinationPanel = () => {
   if (currentLocation.value) departure.value = "Ma position";
   showDestinations.value = true;
   closePopup();
+};
+
+const handleOpenStop = () => {
+  openDestinationPanel();
+};
+
+const selectRole = (role: RiderRole) => {
+  auth.setRole(role);
+  showRoleMenu.value = false;
 };
 
 const fetchSuggestions = useDebounceFn(async (query: string) => {
@@ -203,6 +216,11 @@ const togglePauseOrResume = () => {
 
 onMounted(() => {
   locate();
+  window.addEventListener("open-stop-panel", handleOpenStop);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("open-stop-panel", handleOpenStop);
 });
 </script>
 
@@ -210,9 +228,51 @@ onMounted(() => {
   <section class="space-y-6">
     <div>
       <ClientOnly>
-        <div class="relative h-[calc(100dvh-64px)] w-full overflow-hidden border border-white/10 bg-slate-900">
+        <div class="relative h-[calc(100dvh)] w-full overflow-hidden border border-white/10 bg-slate-900">
           <MapboxMap v-if="config.public.mapboxToken" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
+            <div class="absolute left-1/2 top-4 z-20 -translate-x-1/2">
+              <div class="relative">
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-base font-semibold text-slate-900 shadow-[0_6px_22px_rgba(0,0,0,0.18)] ring-1 ring-slate-200 transition hover:bg-white/95 focus:outline-none"
+                  @click="showRoleMenu = !showRoleMenu"
+                  aria-haspopup="true"
+                  :aria-expanded="showRoleMenu"
+                >
+                  <span>{{ roleLabel }}</span>
+                  <ChevronDown class="h-4 w-4 text-slate-700" />
+                </button>
+                <div v-if="showRoleMenu" class="absolute left-0 right-0 mt-2 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200">
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+                    @click="selectRole('Hitchhiker')"
+                  >
+                    <span>Passager</span>
+                    <span v-if="auth.role === 'Hitchhiker'" class="text-emerald-500">•</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+                    @click="selectRole('Driver')"
+                  >
+                    <span>Conducteur</span>
+                    <span v-if="auth.role === 'Driver'" class="text-emerald-500">•</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="absolute right-4 top-4 z-20 flex gap-2">
+              <button
+                type="button"
+                class="rounded-full bg-white/90 p-2 text-slate-700 shadow-lg ring-1 ring-slate-200 transition hover:bg-white focus:outline-none"
+                aria-label="Notifications"
+              >
+                <Bell class="h-5 w-5" />
+              </button>
+            </div>
             <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
+
             <MapboxDefaultMarker
               v-for="user in filteredUsers"
               :key="user.id"
@@ -333,13 +393,6 @@ onMounted(() => {
               />
             </MapboxSource>
             <MapboxDefaultMarker v-if="destinationCoords" marker-id="selected-destination" :lnglat="destinationCoords" :options="{ anchor: 'bottom' }" />
-            <button
-              type="button"
-              class="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 transform rounded-full bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg ring-1 ring-slate-200 transition hover:shadow-xl focus:outline-none"
-              @click="openDestinationPanel"
-            >
-              Faire du stop
-            </button>
             <Transition name="fade">
               <div
                 v-if="activeDestination"
