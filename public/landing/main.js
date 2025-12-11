@@ -20,4 +20,3 @@ appLinks.forEach((link) => {
     window.location.href = "/app";
   });
 });
-

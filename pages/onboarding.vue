@@ -1,55 +1,55 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { computed, ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
-const router = useRouter()
+const auth = useAuthStore();
+const router = useRouter();
 
-const showIntro = ref(true)
-const onboardingStep = ref(0)
-const firstName = ref('')
-const lastName = ref('')
-const totalSteps = 4
+const showIntro = ref(true);
+const onboardingStep = ref(0);
+const firstName = ref("");
+const lastName = ref("");
+const totalSteps = 4;
 
-const progressValue = computed(() => (showIntro.value ? 0 : onboardingStep.value + 1))
-const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`)
+const progressValue = computed(() => (showIntro.value ? 0 : onboardingStep.value + 1));
+const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`);
 
 const startExperience = () => {
-  showIntro.value = false
-}
+  showIntro.value = false;
+};
 
 const nextStep = () => {
-  onboardingStep.value = Math.min(onboardingStep.value + 1, 3)
-}
+  onboardingStep.value = Math.min(onboardingStep.value + 1, 3);
+};
 
 const prevStep = () => {
-  onboardingStep.value = Math.max(onboardingStep.value - 1, 0)
-}
+  onboardingStep.value = Math.max(onboardingStep.value - 1, 0);
+};
 
 const setAvailability = (value: boolean) => {
-  if (auth.availability !== value) auth.toggleAvailability()
-}
+  if (auth.availability !== value) auth.toggleAvailability();
+};
 
 const complete = () => {
   if (firstName.value.trim().length || lastName.value.trim().length) {
     auth.setProfile({
       firstName: firstName.value.trim(),
-      lastName: lastName.value.trim()
-    })
+      lastName: lastName.value.trim(),
+    });
   }
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/");
+};
 
 const skip = () => {
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/");
+};
 </script>
 
 <template>
   <section class="relative overflow-hidden pt-6 pb-36 sm:pt-8 sm:pb-28">
-    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(8,145,178,0.08),transparent_32%)]" />
+    <div class="pointer-events-none absolute inset-0" />
 
     <div class="relative mx-auto max-w-4xl space-y-8 px-4 sm:px-6">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -91,9 +91,7 @@ const skip = () => {
             <h2 class="text-2xl font-bold text-white" v-else-if="onboardingStep === 2">Rends-toi visible</h2>
             <h2 class="text-2xl font-bold text-white" v-else>Complète ton profil</h2>
 
-            <p class="text-slate-300" v-if="onboardingStep === 0">
-              Active la géolocalisation pour voir qui est autour de toi et afficher tes propres trajets.
-            </p>
+            <p class="text-slate-300" v-if="onboardingStep === 0">Active la géolocalisation pour voir qui est autour de toi et afficher tes propres trajets.</p>
           </div>
 
           <div v-if="onboardingStep === 1" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -180,9 +178,7 @@ const skip = () => {
               <span>Ajoute ton nom pour des échanges plus simples.</span>
             </li>
           </ul>
-          <div class="mt-4 rounded-xl bg-slate-800/70 p-3 text-xs text-slate-400">
-            Astuce : tu peux revenir à tout moment changer ton statut ou ton rôle depuis la carte.
-          </div>
+          <div class="mt-4 rounded-xl bg-slate-800/70 p-3 text-xs text-slate-400">Astuce : tu peux revenir à tout moment changer ton statut ou ton rôle depuis la carte.</div>
         </aside>
 
         <div class="lg:col-span-2">
@@ -222,5 +218,3 @@ const skip = () => {
     </div>
   </section>
 </template>
-
-

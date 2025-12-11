@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Component } from "vue";
-import { LayoutDashboard, LogIn, MapPinned, UserRound } from "lucide-vue-next";
+import { Car, LayoutDashboard, LogIn, MapPinned, ThumbsUp, UserRound } from "lucide-vue-next";
+import { useAuthStore } from "@/stores/auth";
 
 interface NavItem {
   label: string;
@@ -9,45 +10,65 @@ interface NavItem {
   icon: Component;
 }
 
+const auth = useAuthStore();
 const route = useRoute();
 const isMapPage = computed(() => route.path === "/");
 const isOnboarding = computed(() => route.path.startsWith("/onboarding"));
 
-const navItems: NavItem[] = [
+const isLoggedIn = computed(() => Boolean(auth.profile.firstName));
+
+const navItems = computed<NavItem[]>(() => [
   { label: "Carte", to: "/", icon: MapPinned },
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "Profil", to: "/profile/1", icon: UserRound },
-  { label: "Login", to: "/login", icon: LogIn },
-];
+  {
+    label: isLoggedIn.value ? "Profil" : "Login",
+    to: isLoggedIn.value ? "/profile/1" : "/login",
+    icon: isLoggedIn.value ? UserRound : LogIn,
+  },
+]);
 
 const isActive = (path: string) => {
   if (path === "/") return route.path === "/";
   return route.path === path || route.path.startsWith(`${path}/`);
 };
+
+const emitOpenStop = () => {
+  window.dispatchEvent(new CustomEvent("open-stop-panel"));
+};
 </script>
 
 <template>
   <div class="flex min-h-dvh flex-col overflow-hidden bg-slate-950 text-slate-100">
-    <div
-      class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(8,145,178,0.08),transparent_32%)]"
-    />
+    <div class="pointer-events-none fixed inset-0 )]" />
     <div class="relative flex-1 overflow-hidden">
       <div :class="isMapPage ? 'h-full' : 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 pt-6'">
         <slot />
       </div>
     </div>
-    <nav v-if="!isOnboarding" class="fixed bottom-0 left-0 right-0 h-16 border-t border-white/10 bg-slate-900/90 backdrop-blur">
-      <div class="mx-auto flex h-full max-w-screen-lg items-center justify-between px-6">
-        <NuxtLink
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          class="flex flex-1 flex-col items-center gap-1 text-xs font-semibold transition"
-          :class="isActive(item.to) ? 'text-emerald-400' : 'text-slate-300'"
-        >
-          <component :is="item.icon" class="h-6 w-6" />
-          <span>{{ item.label }}</span>
-        </NuxtLink>
+    <nav v-if="!isOnboarding" class="pointer-events-none fixed inset-x-0 bottom-4 flex justify-center">
+      <div class="flex items-center gap-3">
+        <div class="pointer-events-auto flex items-center gap-3 rounded-full bg-white px-2 py-2 text-emerald-700 shadow-xl shadow-emerald-900/20">
+          <NuxtLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            class="flex h-12 w-12 items-center justify-center rounded-full text-lg transition"
+            :class="isActive(item.to) ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'bg-white text-emerald-700 hover:bg-emerald-50'"
+          >
+            <span class="sr-only">{{ item.label }}</span>
+            <component :is="item.icon" class="h-6 w-6" />
+          </NuxtLink>
+        </div>
+        <div class="bg-white rounded-full p-2">
+          <button
+            type="button"
+            class="pointer-events-auto flex h-12 items-center justify-center rounded-full bg-emerald-600 px-4 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 transition hover:bg-emerald-500"
+            @click="emitOpenStop"
+          >
+            <component :is="auth.role === 'Driver' ? Car : ThumbsUp" :class="['h-6 w-6', auth.role === 'Driver' ? '' : 'rotate-12']" aria-hidden="true" />
+            <span class="sr-only">Faire du stop</span>
+          </button>
+        </div>
       </div>
     </nav>
   </div>
