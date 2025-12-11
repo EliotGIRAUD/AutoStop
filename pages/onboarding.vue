@@ -5,18 +5,13 @@ import { useAuthStore } from "@/stores/auth";
 const auth = useAuthStore();
 const router = useRouter();
 
-const showIntro = ref(true);
-const onboardingStep = ref(0);
-const firstName = ref("");
-const lastName = ref("");
-const totalSteps = 4;
+const onboardingStep = ref(0)
+const firstName = ref('')
+const lastName = ref('')
+const totalSteps = 4
 
-const progressValue = computed(() => (showIntro.value ? 0 : onboardingStep.value + 1));
-const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`);
-
-const startExperience = () => {
-  showIntro.value = false;
-};
+const progressValue = computed(() => onboardingStep.value + 1)
+const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`)
 
 const nextStep = () => {
   onboardingStep.value = Math.min(onboardingStep.value + 1, 3);
@@ -29,6 +24,16 @@ const prevStep = () => {
 const setAvailability = (value: boolean) => {
   if (auth.availability !== value) auth.toggleAvailability();
 };
+
+const goToSignup = () => {
+  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
+  router.push('/signup')
+}
+
+const goToLogin = () => {
+  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
+  router.push('/login')
+}
 
 const complete = () => {
   if (firstName.value.trim().length || lastName.value.trim().length) {
@@ -48,37 +53,98 @@ const skip = () => {
 </script>
 
 <template>
-  <section class="relative overflow-hidden pt-6 pb-36 sm:pt-8 sm:pb-28">
-    <div class="pointer-events-none absolute inset-0" />
+  <section class="min-h-dvh bg-white text-slate-900">
+    <div class="mx-auto flex min-h-dvh max-w-3xl flex-col px-6 pb-14 pt-6">
+      <header class="flex items-center justify-between">
+        <div class="w-14">
+          <button
+            v-if="onboardingStep > 0"
+            type="button"
+            class="text-lg font-semibold text-slate-500 transition hover:text-slate-700"
+            @click="prevStep"
+            aria-label="Précédent"
+          >
+            ←
+          </button>
+        </div>
+        <span class="text-sm font-semibold text-slate-400">{{ progressValue }} / {{ totalSteps }}</span>
+        <button type="button" class="text-base font-semibold text-slate-500" @click="skip">Passer</button>
+      </header>
+
+      <div v-if="onboardingStep === 0" class="flex flex-1 flex-col items-center gap-8 pt-4">
+        <img src="/onboarding/Anywhere_you_are_1.svg" alt="Onboarding étape 1" class="w-full max-w-[420px]" />
 
     <div class="relative mx-auto max-w-4xl space-y-8 px-4 sm:px-6">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="h-2 flex-1 rounded-full bg-slate-800">
           <div class="h-full rounded-full bg-gradient-to-r from-primary-400 to-cyan-400 transition-all" :style="{ width: progressWidth }" />
         </div>
-        <span class="text-xs font-semibold text-slate-400">{{ progressValue }} / {{ totalSteps }}</span>
       </div>
 
-      <div v-if="showIntro" class="space-y-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur sm:p-10">
+      <div v-else-if="onboardingStep === 1" class="flex flex-1 flex-col items-center gap-8 pt-4">
+        <img src="/onboarding/At_anytime_2.svg" alt="Onboarding étape 2" class="w-full max-w-[420px]" />
+
         <div class="space-y-3 text-center">
           <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary-300">Bienvenue</p>
           <h1 class="text-3xl font-bold leading-tight text-white sm:text-4xl">Prêt(e) à rejoindre PICKY ?</h1>
           <p class="text-base text-slate-300 sm:text-lg">Une courte expérience pour configurer ton rôle, ta dispo et ton profil. Tu peux passer à tout moment.</p>
         </div>
-        <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+
+        <div class="mt-auto flex justify-center pb-6">
           <button
             type="button"
             class="w-full rounded-full bg-primary-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:w-auto"
             @click="startExperience"
           >
-            Commencer l'expérience
+            <svg viewBox="0 0 120 120" class="h-full w-full">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
+              <circle
+                cx="60"
+                cy="60"
+                r="50"
+                fill="none"
+                stroke="#EB5D1F"
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-dasharray="180 360"
+                transform="rotate(-90 60 60)"
+              />
+              <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
+              <path
+                d="M55 60h14m0 0l-5-5m5 5l-5 5"
+                stroke="white"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
+        </div>
+      </div>
+
+      <div v-else-if="onboardingStep === 2" class="flex flex-1 flex-col items-center gap-8 pt-4">
+        <img src="/onboarding/3.svg" alt="Onboarding étape 3" class="w-full max-w-[420px]" />
+
+        <div class="space-y-3 text-center">
+          <h1 class="text-3xl font-black text-slate-900">En route</h1>
+          <p class="text-base leading-relaxed text-slate-500">
+            Planifie ou accepte un trajet en un geste. Reste visible pour les conducteurs tout autour de toi.
+          </p>
+        </div>
+
+        <div class="mt-auto flex justify-center pb-6">
           <button
             type="button"
-            class="w-full rounded-full px-5 py-3 text-sm font-semibold text-slate-200 ring-1 ring-white/10 transition hover:bg-slate-800 sm:w-auto"
-            @click="skip"
+            class="relative h-24 w-24 transition hover:scale-105 focus:outline-none"
+            @click="nextStep"
+            aria-label="Continuer"
           >
-            Passer
+            <svg viewBox="0 0 120 120" class="h-full w-full">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="4" />
+              <circle cx="60" cy="60" r="44" fill="none" stroke="#EB5D1F" stroke-width="4" />
+              <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
+              <text x="60" y="64" text-anchor="middle" fill="white" font-size="20" font-weight="600">Go</text>
+            </svg>
           </button>
         </div>
       </div>
@@ -215,6 +281,8 @@ const skip = () => {
           </div>
         </div>
       </div>
+
+      <div v-else class="hidden"></div>
     </div>
   </section>
 </template>
