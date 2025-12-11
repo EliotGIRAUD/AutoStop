@@ -52,7 +52,7 @@ const setAvailability = (value: boolean) => {
 </script>
 
 <template>
-  <div class="flex min-h-dvh flex-col overflow-hidden bg-slate-950 text-slate-100">
+  <div class="flex min-h-dvh flex-col overflow-hidden bg-slate-100 text-slate-900">
     <div class="pointer-events-none fixed inset-0 )]" />
     <div class="relative flex-1 overflow-hidden">
       <div :class="isMapPage ? 'h-full' : 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 pt-6'">
