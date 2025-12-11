@@ -3,145 +3,108 @@ import { ref } from 'vue'
 import { useRouter } from '#imports'
 import { useAuthStore } from '@/stores/auth'
 
-type RiderRole = 'Driver' | 'Hitchhiker'
-
 const auth = useAuthStore()
 const router = useRouter()
 
-const role = ref<RiderRole>(auth.role)
-const phone = ref('')
-const firstName = ref('')
-const lastName = ref('')
-const age = ref<number | null>(null)
-const photo = ref('')
+const identifier = ref('')
+const password = ref('')
+const showPassword = ref(false)
 
 const handleSubmit = () => {
-  auth.setRole(role.value)
+  const currentProfile = (auth as any).profile ?? {}
+  auth.setRole('Hitchhiker')
   auth.setProfile({
-    firstName: firstName.value,
-    lastName: lastName.value,
-    age: age.value,
-    photo: photo.value,
-    phone: phone.value
-  })
+    firstName: currentProfile.firstName || 'Utilisateur',
+    lastName: currentProfile.lastName || '',
+    email: identifier.value,
+    phone: '',
+    age: null,
+    photo: ''
+  } as any)
+  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
   router.push('/dashboard')
-}
-
-const handlePhotoChange = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-  if (!file || !file.type.startsWith('image/')) return
-  const reader = new FileReader()
-  reader.onload = () => {
-    photo.value = reader.result as string
-  }
-  reader.readAsDataURL(file)
 }
 </script>
 
 <template>
-  <section class="space-y-6">
-    <header class="space-y-2">
-      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">Connexion</p>
-      <h1 class="text-3xl font-bold text-white">Choisissez votre rôle.</h1>
-      <p class="text-base text-slate-300">Simulation rapide pour tester le prototype.</p>
-    </header>
+  <section class="mx-auto flex min-h-dvh max-w-sm flex-col gap-8 bg-white px-5 py-10 text-slate-900">
+    <div class="space-y-2 text-center">
+      <h1 class="text-2xl font-black">Connectez-vous</h1>
+    </div>
 
-    <div class="space-y-4 rounded-3xl border border-white/10 bg-slate-900 p-6">
-      <div class="grid grid-cols-2 gap-3">
+    <div class="space-y-4">
+      <label class="block">
+        <span class="sr-only">Email ou numéro de téléphone</span>
+        <input
+          v-model="identifier"
+          type="text"
+          placeholder="Email ou numéro de téléphone"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        />
+      </label>
+
+      <label class="block relative">
+        <span class="sr-only">Mot de passe</span>
+        <input
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          placeholder="Mot de passe"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 pr-12 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        />
         <button
           type="button"
-          class="rounded-2xl px-4 py-3 text-sm font-semibold ring-1 transition focus:outline-none"
-          :class="
-            role === 'Driver'
-              ? 'bg-emerald-500 text-slate-900 ring-emerald-300'
-              : 'bg-slate-800 text-slate-200 ring-white/10'
-          "
-          @click="role = 'Driver'"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"
+          @click="showPassword = !showPassword"
+          aria-label="Afficher le mot de passe"
         >
-          Conducteur
+          👁️
         </button>
-        <button
-          type="button"
-          class="rounded-2xl px-4 py-3 text-sm font-semibold ring-1 transition focus:outline-none"
-          :class="
-            role === 'Hitchhiker'
-              ? 'bg-cyan-500 text-slate-900 ring-cyan-300'
-              : 'bg-slate-800 text-slate-200 ring-white/10'
-          "
-          @click="role = 'Hitchhiker'"
-        >
-          Auto-stoppeur
-        </button>
-      </div>
+      </label>
 
-      <div class="space-y-2">
-        <label for="firstName" class="text-sm font-semibold text-slate-200">Prénom</label>
-        <input
-          id="firstName"
-          v-model="firstName"
-          type="text"
-          placeholder="Jean"
-          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
-        />
-      </div>
-
-      <div class="space-y-2">
-        <label for="lastName" class="text-sm font-semibold text-slate-200">Nom</label>
-        <input
-          id="lastName"
-          v-model="lastName"
-          type="text"
-          placeholder="Dupont"
-          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
-        />
-      </div>
-
-      <div class="space-y-2">
-        <label for="age" class="text-sm font-semibold text-slate-200">Âge</label>
-        <input
-          id="age"
-          v-model.number="age"
-          type="number"
-          min="16"
-          max="99"
-          placeholder="30"
-          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
-        />
-      </div>
-
-      <div class="space-y-2">
-        <label for="photo" class="text-sm font-semibold text-slate-200">Photo de profil</label>
-        <input
-          id="photo"
-          type="file"
-          accept="image/*"
-          @change="handlePhotoChange"
-          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white file:mr-4 file:rounded-xl file:border-0 file:bg-slate-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white focus:border-emerald-400 focus:outline-none"
-        />
-        <div v-if="photo" class="overflow-hidden rounded-2xl border border-white/10 bg-slate-800">
-          <img :src="photo" alt="Prévisualisation" class="h-24 w-full object-cover" />
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <label for="phone" class="text-sm font-semibold text-slate-200">Téléphone</label>
-        <input
-          id="phone"
-          v-model="phone"
-          type="tel"
-          placeholder="06 00 00 00 00"
-          class="w-full rounded-2xl border border-white/10 bg-slate-800 px-4 py-3 text-base text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
-        />
-      </div>
+      <div class="text-right text-sm font-semibold text-orange-500">Mot de passe oublié ?</div>
 
       <button
         type="button"
-        class="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-base font-semibold text-slate-900 transition hover:brightness-110 focus:outline-none"
+        class="w-full rounded-full bg-orange-500 px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
         @click="handleSubmit"
       >
-        Continuer
+        Se connecter
       </button>
+
+      <div class="flex items-center gap-3 text-sm text-slate-400">
+        <span class="flex-1 border-t border-slate-200" />
+        <span>ou</span>
+        <span class="flex-1 border-t border-slate-200" />
+      </div>
+
+      <div class="space-y-3">
+        <button
+          type="button"
+          class="flex w-full items-center justify-center gap-3 rounded-full border border-slate-300 px-4 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-50"
+        >
+          <img src="/onboarding/Gmail.svg" alt="Gmail" class="h-5 w-5" />
+          <span>Se connecter avec Gmail</span>
+        </button>
+        <button
+          type="button"
+          class="flex w-full items-center justify-center gap-3 rounded-full border border-slate-300 px-4 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-50"
+        >
+          <img src="/onboarding/Facebook.svg" alt="Facebook" class="h-5 w-5" />
+          <span>Se connecter avec Facebook</span>
+        </button>
+        <button
+          type="button"
+          class="flex w-full items-center justify-center gap-3 rounded-full border border-slate-300 px-4 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-50"
+        >
+          <img src="/onboarding/Apple.svg" alt="Apple" class="h-5 w-5" />
+          <span>Se connecter avec Apple</span>
+        </button>
+      </div>
+
+      <p class="pt-2 text-center text-sm text-slate-700">
+        Pas de compte ?
+        <NuxtLink to="/signup" class="font-semibold text-orange-500"> Inscrivez-vous</NuxtLink>
+      </p>
     </div>
   </section>
 </template>
