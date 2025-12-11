@@ -5,13 +5,13 @@ import { useAuthStore } from "@/stores/auth";
 const auth = useAuthStore();
 const router = useRouter();
 
-const onboardingStep = ref(0)
-const firstName = ref('')
-const lastName = ref('')
-const totalSteps = 4
+const onboardingStep = ref(0);
+const firstName = ref("");
+const lastName = ref("");
+const totalSteps = 4;
 
-const progressValue = computed(() => onboardingStep.value + 1)
-const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`)
+const progressValue = computed(() => onboardingStep.value + 1);
+const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`);
 
 const nextStep = () => {
   onboardingStep.value = Math.min(onboardingStep.value + 1, 3);
@@ -26,14 +26,14 @@ const setAvailability = (value: boolean) => {
 };
 
 const goToSignup = () => {
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/signup')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/signup");
+};
 
 const goToLogin = () => {
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/login')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/login");
+};
 
 const complete = () => {
   if (firstName.value.trim().length || lastName.value.trim().length) {
@@ -57,13 +57,7 @@ const skip = () => {
     <div class="mx-auto flex min-h-dvh w-full max-w-4xl flex-col px-5 pb-16 pt-6 sm:px-8">
       <header class="flex items-center justify-between">
         <div class="w-14">
-          <button
-            v-if="onboardingStep > 0"
-            type="button"
-            class="text-lg font-semibold text-slate-500 transition hover:text-slate-700"
-            @click="prevStep"
-            aria-label="Précédent"
-          >
+          <button v-if="onboardingStep > 0" type="button" class="text-lg font-semibold text-slate-500 transition hover:text-slate-700" @click="prevStep" aria-label="Précédent">
             ←
           </button>
         </div>
@@ -82,33 +76,12 @@ const skip = () => {
         </div>
 
         <div class="mt-auto flex justify-center pb-6">
-          <button
-            type="button"
-            class="relative h-24 w-24 transition hover:scale-105 focus:outline-none"
-            @click="nextStep"
-            aria-label="Continuer"
-          >
+          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
             <svg viewBox="0 0 120 120" class="h-full w-full">
               <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
-              <circle
-                cx="60"
-                cy="60"
-                r="50"
-                fill="none"
-                stroke="#EB5D1F"
-                stroke-width="8"
-                stroke-linecap="round"
-                stroke-dasharray="90 360"
-                transform="rotate(-90 60 60)"
-              />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="90 360" transform="rotate(-90 60 60)" />
               <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
-              <path
-                d="M55 60h14m0 0l-5-5m5 5l-5 5"
-                stroke="white"
-                stroke-width="4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+              <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
         </div>
@@ -119,39 +92,16 @@ const skip = () => {
 
         <div class="space-y-3 text-center">
           <h1 class="text-3xl font-black text-slate-900">À tout moment</h1>
-          <p class="text-base leading-relaxed text-slate-500">
-            Choisis ton rôle et rends-toi visible quand tu es prêt. Tu peux changer d’avis à tout instant depuis l’appli.
-          </p>
+          <p class="text-base leading-relaxed text-slate-500">Choisis ton rôle et rends-toi visible quand tu es prêt. Tu peux changer d’avis à tout instant depuis l’appli.</p>
         </div>
 
         <div class="mt-auto flex justify-center pb-6">
-          <button
-            type="button"
-            class="relative h-24 w-24 transition hover:scale-105 focus:outline-none"
-            @click="nextStep"
-            aria-label="Continuer"
-          >
+          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
             <svg viewBox="0 0 120 120" class="h-full w-full">
               <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
-              <circle
-                cx="60"
-                cy="60"
-                r="50"
-                fill="none"
-                stroke="#EB5D1F"
-                stroke-width="8"
-                stroke-linecap="round"
-                stroke-dasharray="180 360"
-                transform="rotate(-90 60 60)"
-              />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="180 360" transform="rotate(-90 60 60)" />
               <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
-              <path
-                d="M55 60h14m0 0l-5-5m5 5l-5 5"
-                stroke="white"
-                stroke-width="4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+              <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
         </div>
@@ -162,18 +112,11 @@ const skip = () => {
 
         <div class="space-y-3 text-center">
           <h1 class="text-3xl font-black text-slate-900">En route</h1>
-          <p class="text-base leading-relaxed text-slate-500">
-            Planifie ou accepte un trajet en un geste. Reste visible pour les conducteurs tout autour de toi.
-          </p>
+          <p class="text-base leading-relaxed text-slate-500">Planifie ou accepte un trajet en un geste. Reste visible pour les conducteurs tout autour de toi.</p>
         </div>
 
         <div class="mt-auto flex justify-center pb-6">
-          <button
-            type="button"
-            class="relative h-24 w-24 transition hover:scale-105 focus:outline-none"
-            @click="nextStep"
-            aria-label="Continuer"
-          >
+          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
             <svg viewBox="0 0 120 120" class="h-full w-full">
               <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="4" />
               <circle cx="60" cy="60" r="44" fill="none" stroke="#EB5D1F" stroke-width="4" />
@@ -189,9 +132,7 @@ const skip = () => {
 
         <div class="space-y-3 text-center">
           <h1 class="text-3xl font-black text-slate-900">Bienvenue à bord</h1>
-          <p class="text-base leading-relaxed text-slate-500">
-            Crée ton compte ou connecte-toi pour rejoindre la communauté PickUp et commencer tes trajets.
-          </p>
+          <p class="text-base leading-relaxed text-slate-500">Crée ton compte ou connecte-toi pour rejoindre la communauté PickUp et commencer tes trajets.</p>
         </div>
 
         <div class="mt-auto flex w-full max-w-md flex-col gap-4 pb-8">

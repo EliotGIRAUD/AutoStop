@@ -262,7 +262,7 @@ onBeforeUnmount(() => {
                     @click="selectRole('Hitchhiker')"
                   >
                     <span>Passager</span>
-                    <span v-if="auth.role === 'Hitchhiker'" class="text-emerald-500">•</span>
+                    <span v-if="auth.role === 'Hitchhiker'" class="text-primary-500">•</span>
                   </button>
                   <button
                     type="button"
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
                     @click="selectRole('Driver')"
                   >
                     <span>Conducteur</span>
-                    <span v-if="auth.role === 'Driver'" class="text-emerald-500">•</span>
+                    <span v-if="auth.role === 'Driver'" class="text-primary-500">•</span>
                   </button>
                 </div>
               </div>
@@ -298,7 +298,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   class="flex h-10 w-10 items-center justify-center rounded-full shadow-xl ring-2 transition hover:scale-110 focus:outline-none"
-                  :class="user.role === 'Driver' ? 'bg-emerald-500 ring-emerald-200/60' : 'bg-cyan-500 ring-cyan-200/60'"
+                  :class="user.role === 'Driver' ? 'bg-primary-500 ring-primary-200/60' : 'bg-cyan-500 ring-cyan-200/60'"
                   @click="activePopupId = user.id"
                 >
                   <span class="h-2 w-2 rounded-full bg-white"></span>
@@ -322,9 +322,9 @@ onBeforeUnmount(() => {
                   <div class="flex items-start gap-3">
                     <div
                       class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ring-2"
-                      :class="user.role === 'Driver' ? 'bg-emerald-100 ring-emerald-300' : 'bg-cyan-100 ring-cyan-300'"
+                      :class="user.role === 'Driver' ? 'bg-primary-100 bg-primary-500' : 'bg-cyan-100 ring-cyan-300'"
                     >
-                      <span class="text-lg font-bold" :class="user.role === 'Driver' ? 'text-emerald-600' : 'text-cyan-600'">
+                      <span class="text-lg font-bold" :class="user.role === 'Driver' ? 'text-primary-600' : 'text-cyan-600'">
                         {{ user.name.charAt(0).toUpperCase() }}
                       </span>
                     </div>
@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
                         <div class="mt-1 flex items-center gap-2">
                           <span
                             class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
-                            :class="user.role === 'Driver' ? 'bg-emerald-100 text-emerald-700' : 'bg-cyan-100 text-cyan-700'"
+                            :class="user.role === 'Driver' ? 'bg-primary-100 text-primary-700' : 'bg-cyan-100 text-cyan-700'"
                           >
                             {{ user.role === "Driver" ? "Conducteur" : "Auto-stoppeur" }}
                           </span>
@@ -378,7 +378,7 @@ onBeforeUnmount(() => {
                   </div>
                   <NuxtLink
                     :to="`/profile/${user.id}`"
-                    class="mt-1 block w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none"
+                    class="mt-1 block w-full rounded-xl bg-gradient-to-r from-primary-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-110 focus:outline-none"
                   >
                     Voir le profil
                   </NuxtLink>
@@ -392,7 +392,7 @@ onBeforeUnmount(() => {
                   id: 'route-line',
                   type: 'line',
                   source: 'route-source',
-                  paint: { 'line-color': '#10b981', 'line-width': 5, 'line-opacity': 0.8 },
+                  paint: { 'line-color': '#eb5d1f', 'line-width': 5, 'line-opacity': 0.8 },
                   layout: { 'line-cap': 'round', 'line-join': 'round' },
                 }"
               />
@@ -405,7 +405,7 @@ onBeforeUnmount(() => {
               >
                 <div class="flex items-start justify-between gap-3">
                   <div class="space-y-1">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Trajet actif</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-primary-600">Trajet actif</p>
                     <p class="text-sm font-semibold text-slate-900">{{ activeDestination.label }}</p>
                     <p class="text-xs text-slate-500">Depuis {{ departure || "Ma position" }}</p>
                   </div>
@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
                   </button>
                   <button
                     type="button"
-                    class="flex-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                    class="flex-1 rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-600"
                     @click="togglePauseOrResume"
                   >
                     {{ isPaused ? "Reprendre" : "Pause" }}
@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
                     <input
                       type="text"
                       v-model="departure"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-emerald-400 focus:ring focus:ring-emerald-100"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-primary-400 focus:ring focus:ring-primary-100"
                       :placeholder="currentLocation ? 'Ma position' : 'Votre position actuelle...'"
                       :readonly="!!currentLocation"
                     />
@@ -474,7 +474,7 @@ onBeforeUnmount(() => {
                     </div>
                   </div>
                   <div class="flex gap-3">
-                    <button type="submit" class="flex-1 rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-600">
+                    <button type="submit" class="flex-1 rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-600">
                       Demander un trajet
                     </button>
                     <button
@@ -521,7 +521,7 @@ onBeforeUnmount(() => {
             </button>
             <button
               type="button"
-              class="flex w-full items-center justify-between rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-100 transition hover:bg-emerald-100"
+              class="flex w-full items-center justify-between rounded-xl bg-primary-50 px-4 py-3 text-sm font-semibold text-primary-800 ring-1 ring-primary-100 transition hover:bg-primary-100"
               @click="contactPreset"
             >
               <span>Contacter mon contact d'urgence</span>
