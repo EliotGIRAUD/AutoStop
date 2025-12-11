@@ -61,13 +61,13 @@ const setAvailability = (value: boolean) => {
     </div>
     <nav v-if="!isOnboarding" class="pointer-events-none fixed inset-x-0 bottom-4 flex justify-center">
       <div class="flex items-center gap-3">
-        <div class="pointer-events-auto flex items-center gap-3 rounded-full bg-white px-2 py-2 text-emerald-700 shadow-xl shadow-emerald-900/20">
+        <div class="pointer-events-auto flex items-center gap-3 rounded-full bg-white px-2 py-2 text-orange-700 shadow-xl shadow-[0_10px_26px_rgba(235,93,31,0.2)]">
           <NuxtLink
             v-for="item in navItems"
             :key="item.to"
             :to="item.to"
             class="flex h-12 w-12 items-center justify-center rounded-full text-lg transition"
-            :class="isActive(item.to) ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'bg-white text-emerald-700 hover:bg-emerald-50'"
+            :class="isActive(item.to) ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/30' : 'bg-white text-orange-700  hover:bg-orange-50'"
           >
             <span class="sr-only">{{ item.label }}</span>
             <component :is="item.icon" class="h-6 w-6" />
@@ -76,7 +76,7 @@ const setAvailability = (value: boolean) => {
         <div class="bg-white rounded-full p-2">
           <button
             type="button"
-            class="pointer-events-auto flex h-12 items-center justify-center rounded-full bg-emerald-600 px-4 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 transition hover:bg-emerald-500"
+            class="pointer-events-auto flex h-12 items-center justify-center rounded-full bg-primary-500 px-4 text-sm font-semibold text-white shadow-lg shadow-[#f3a989]/30 transition hover:bg-primary-500]"
             @click="handleStopClick"
           >
             <component :is="auth.role === 'Driver' ? Car : ThumbsUp" :class="['h-6 w-6', auth.role === 'Driver' ? '' : 'rotate-12']" aria-hidden="true" />
@@ -91,7 +91,7 @@ const setAvailability = (value: boolean) => {
     >
       <div class="flex items-start justify-between gap-3">
         <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Statut</p>
+          <p class="text-xs font-semibold uppercase tracking-wide text-primary-600">Statut</p>
           <p class="text-lg font-semibold text-slate-900">
             {{ auth.availability ? "Disponible" : "Hors ligne" }}
           </p>
@@ -109,7 +109,7 @@ const setAvailability = (value: boolean) => {
         <button
           type="button"
           class="rounded-xl border px-3 py-2 text-sm font-semibold transition"
-          :class="auth.availability ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
+          :class="auth.availability ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
           @click="setAvailability(true)"
         >
           Disponible
