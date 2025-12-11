@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { computed, ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
-const router = useRouter()
+const auth = useAuthStore();
+const router = useRouter();
 
 const onboardingStep = ref(0)
 const firstName = ref('')
@@ -14,16 +14,16 @@ const progressValue = computed(() => onboardingStep.value + 1)
 const progressWidth = computed(() => `${(progressValue.value / totalSteps) * 100}%`)
 
 const nextStep = () => {
-  onboardingStep.value = Math.min(onboardingStep.value + 1, 3)
-}
+  onboardingStep.value = Math.min(onboardingStep.value + 1, 3);
+};
 
 const prevStep = () => {
-  onboardingStep.value = Math.max(onboardingStep.value - 1, 0)
-}
+  onboardingStep.value = Math.max(onboardingStep.value - 1, 0);
+};
 
 const setAvailability = (value: boolean) => {
-  if (auth.availability !== value) auth.toggleAvailability()
-}
+  if (auth.availability !== value) auth.toggleAvailability();
+};
 
 const goToSignup = () => {
   if (process.client) localStorage.setItem('onboardingCompleted', 'true')
@@ -39,17 +39,17 @@ const complete = () => {
   if (firstName.value.trim().length || lastName.value.trim().length) {
     auth.setProfile({
       firstName: firstName.value.trim(),
-      lastName: lastName.value.trim()
-    })
+      lastName: lastName.value.trim(),
+    });
   }
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/");
+};
 
 const skip = () => {
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/')
-}
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  router.push("/");
+};
 </script>
 
 <template>
@@ -216,5 +216,3 @@ const skip = () => {
     </div>
   </section>
 </template>
-
-
