@@ -20,16 +20,17 @@ const handleSubmit = () => {
     phone: '',
     age: null,
     photo: ''
-  } as any)
+  })
+  auth.setAuthenticated(true)
   if (process.client) localStorage.setItem('onboardingCompleted', 'true')
   router.push('/dashboard')
 }
 </script>
 
 <template>
-  <section class="mx-auto flex min-h-dvh max-w-sm flex-col gap-8 bg-white px-5 py-10 text-slate-900">
+  <section class="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-8 bg-white px-5 pb-12 pt-10 text-slate-900 sm:px-8">
     <div class="space-y-2 text-center">
-      <h1 class="text-2xl font-black">Connectez-vous</h1>
+      <h1 class="text-2xl font-black sm:text-3xl">Connectez-vous</h1>
     </div>
 
     <div class="space-y-4">
@@ -39,7 +40,7 @@ const handleSubmit = () => {
           v-model="identifier"
           type="text"
           placeholder="Email ou numéro de téléphone"
-          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
       </label>
 
@@ -49,7 +50,7 @@ const handleSubmit = () => {
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
           placeholder="Mot de passe"
-          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 pr-12 text-base text-slate-900 placeholder:text-slate-400 focus:border-orange-500 focus:outline-none"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 pr-12 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
         <button
           type="button"
@@ -61,11 +62,11 @@ const handleSubmit = () => {
         </button>
       </label>
 
-      <div class="text-right text-sm font-semibold text-orange-500">Mot de passe oublié ?</div>
+      <div class="text-right text-sm font-semibold text-[#EB5D1F]">Mot de passe oublié ?</div>
 
       <button
         type="button"
-        class="w-full rounded-full bg-orange-500 px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
+        class="w-full rounded-full bg-[#EB5D1F] px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
         @click="handleSubmit"
       >
         Se connecter
@@ -103,7 +104,7 @@ const handleSubmit = () => {
 
       <p class="pt-2 text-center text-sm text-slate-700">
         Pas de compte ?
-        <NuxtLink to="/signup" class="font-semibold text-orange-500"> Inscrivez-vous</NuxtLink>
+        <NuxtLink to="/signup" class="font-semibold text-[#EB5D1F]"> Inscrivez-vous</NuxtLink>
       </p>
     </div>
   </section>

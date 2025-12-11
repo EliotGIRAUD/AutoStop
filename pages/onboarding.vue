@@ -54,7 +54,7 @@ const skip = () => {
 
 <template>
   <section class="min-h-dvh bg-white text-slate-900">
-    <div class="mx-auto flex min-h-dvh max-w-3xl flex-col px-6 pb-14 pt-6">
+    <div class="mx-auto flex min-h-dvh w-full max-w-4xl flex-col px-5 pb-16 pt-6 sm:px-8">
       <header class="flex items-center justify-between">
         <div class="w-14">
           <button
@@ -197,14 +197,14 @@ const skip = () => {
         <div class="mt-auto flex w-full max-w-md flex-col gap-4 pb-8">
           <button
             type="button"
-            class="w-full rounded-full bg-orange-500 px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
+            class="w-full rounded-full bg-[#EB5D1F] px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
             @click="goToSignup"
           >
             Créer un compte
           </button>
           <button
             type="button"
-            class="w-full rounded-full border-2 border-orange-500 px-6 py-4 text-base font-semibold text-orange-500 transition hover:bg-orange-50"
+            class="w-full rounded-full border-2 border-[#EB5D1F] px-6 py-4 text-base font-semibold text-[#EB5D1F] transition hover:bg-orange-50"
             @click="goToLogin"
           >
             Se connecter
