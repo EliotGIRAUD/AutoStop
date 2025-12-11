@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { Component } from "vue";
 import { Car, LayoutDashboard, LogIn, MapPinned, ThumbsUp, UserRound } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
@@ -16,6 +16,7 @@ const isMapPage = computed(() => route.path === "/");
 const isOnboarding = computed(() => route.path.startsWith("/onboarding"));
 
 const isLoggedIn = computed(() => Boolean(auth.profile.firstName));
+const showStatusSheet = ref(false);
 
 const navItems = computed<NavItem[]>(() => [
   { label: "Carte", to: "/", icon: MapPinned },
@@ -34,6 +35,19 @@ const isActive = (path: string) => {
 
 const emitOpenStop = () => {
   window.dispatchEvent(new CustomEvent("open-stop-panel"));
+};
+
+const handleStopClick = () => {
+  if (auth.role === "Driver") {
+    showStatusSheet.value = !showStatusSheet.value;
+    return;
+  }
+  emitOpenStop();
+};
+
+const setAvailability = (value: boolean) => {
+  auth.availability = value;
+  showStatusSheet.value = false;
 };
 </script>
 
@@ -63,7 +77,7 @@ const emitOpenStop = () => {
           <button
             type="button"
             class="pointer-events-auto flex h-12 items-center justify-center rounded-full bg-emerald-600 px-4 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 transition hover:bg-emerald-500"
-            @click="emitOpenStop"
+            @click="handleStopClick"
           >
             <component :is="auth.role === 'Driver' ? Car : ThumbsUp" :class="['h-6 w-6', auth.role === 'Driver' ? '' : 'rotate-12']" aria-hidden="true" />
             <span class="sr-only">Faire du stop</span>
@@ -71,5 +85,44 @@ const emitOpenStop = () => {
         </div>
       </div>
     </nav>
+    <div
+      v-if="showStatusSheet && auth.role === 'Driver'"
+      class="pointer-events-auto fixed bottom-24 left-1/2 z-30 w-[min(90vw,320px)] -translate-x-1/2 rounded-2xl bg-white p-4 text-slate-900 shadow-2xl ring-1 ring-slate-200"
+    >
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Statut</p>
+          <p class="text-lg font-semibold text-slate-900">
+            {{ auth.availability ? "Disponible" : "Hors ligne" }}
+          </p>
+        </div>
+        <button
+          type="button"
+          class="rounded-full bg-slate-100 p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+          @click="showStatusSheet = false"
+          aria-label="Fermer"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          class="rounded-xl border px-3 py-2 text-sm font-semibold transition"
+          :class="auth.availability ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
+          @click="setAvailability(true)"
+        >
+          Disponible
+        </button>
+        <button
+          type="button"
+          class="rounded-xl border px-3 py-2 text-sm font-semibold transition"
+          :class="!auth.availability ? 'border-slate-500 bg-slate-100 text-slate-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
+          @click="setAvailability(false)"
+        >
+          Hors ligne
+        </button>
+      </div>
+    </div>
   </div>
 </template>
