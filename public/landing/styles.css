@@ -1,0 +1,141 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: #07090f;
+  color: #e8ecf7;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero {
+  padding: 96px 20px 64px;
+  background: radial-gradient(120% 120% at 50% 20%, #11203b, #07090f 60%);
+}
+
+.hero__content {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: #9dc0ff;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.lead {
+  margin: 0;
+  color: #c2d1ea;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.cta,
+.ghost {
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.cta {
+  background: linear-gradient(120deg, #4f8bff, #7cb7ff);
+  color: #0b0f18;
+  box-shadow: 0 10px 30px rgba(79, 139, 255, 0.35);
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(79, 139, 255, 0.45);
+}
+
+.ghost {
+  background: transparent;
+  color: #e8ecf7;
+  border-color: #233147;
+}
+
+.ghost:hover {
+  transform: translateY(-1px);
+  border-color: #4f8bff;
+}
+
+.feature {
+  padding: 64px 20px 48px;
+}
+
+.feature__card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.feature__card h2 {
+  margin: 0 0 12px;
+}
+
+.feature__card p {
+  margin: 0;
+  color: #c2d1ea;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 32px 20px;
+  text-align: center;
+  color: #8ea1c4;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: #05060c;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 72px 16px 48px;
+  }
+
+  .feature__card {
+    padding: 24px;
+  }
+}
+
