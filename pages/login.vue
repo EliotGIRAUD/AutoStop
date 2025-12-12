@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from '#imports'
-import { useAuthStore } from '@/stores/auth'
+import { ref } from "vue";
+import { useRouter } from "#imports";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
-const router = useRouter()
+const auth = useAuthStore();
+const router = useRouter();
 
-const identifier = ref('')
-const password = ref('')
-const showPassword = ref(false)
+const identifier = ref("");
+const password = ref("");
+const showPassword = ref(false);
 
-const handleSubmit = () => {
-  const currentProfile = (auth as any).profile ?? {}
-  auth.setRole('Hitchhiker')
+const handleSubmit = async () => {
+  const currentProfile = (auth as any).profile ?? {};
+  auth.setRole("Hitchhiker");
   auth.setProfile({
-    firstName: currentProfile.firstName || 'Utilisateur',
-    lastName: currentProfile.lastName || '',
+    firstName: currentProfile.firstName || "Utilisateur",
+    lastName: currentProfile.lastName || "",
     email: identifier.value,
-    phone: '',
+    phone: "",
     age: null,
-    photo: ''
-  })
-  auth.setAuthenticated(true)
-  if (process.client) localStorage.setItem('onboardingCompleted', 'true')
-  router.push('/dashboard')
-}
+    photo: "",
+  });
+  auth.setAuthenticated(true);
+  if (process.client) localStorage.setItem("onboardingCompleted", "true");
+  await router.push("/dashboard");
+};
 </script>
 
 <template>
@@ -40,7 +40,7 @@ const handleSubmit = () => {
           v-model="identifier"
           type="text"
           placeholder="Email ou numéro de téléphone"
-        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
       </label>
 
@@ -52,23 +52,14 @@ const handleSubmit = () => {
           placeholder="Mot de passe"
           class="w-full rounded-xl border border-slate-200 bg-white px-4 py-4 pr-12 text-base text-slate-900 placeholder:text-slate-400 focus:border-[#EB5D1F] focus:outline-none"
         />
-        <button
-          type="button"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"
-          @click="showPassword = !showPassword"
-          aria-label="Afficher le mot de passe"
-        >
+        <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500" @click="showPassword = !showPassword" aria-label="Afficher le mot de passe">
           👁️
         </button>
       </label>
 
       <div class="text-right text-sm font-semibold text-[#EB5D1F]">Mot de passe oublié ?</div>
 
-      <button
-        type="button"
-        class="w-full rounded-full bg-[#EB5D1F] px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
-        @click="handleSubmit"
-      >
+      <button type="button" class="w-full rounded-full bg-[#EB5D1F] px-4 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110" @click="handleSubmit">
         Se connecter
       </button>
 
@@ -109,4 +100,3 @@ const handleSubmit = () => {
     </div>
   </section>
 </template>
-
