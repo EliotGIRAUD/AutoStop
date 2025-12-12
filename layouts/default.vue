@@ -22,9 +22,9 @@ const navItems = computed<NavItem[]>(() => [
   { label: "Carte", to: "/", icon: HouseIcon },
   { label: "Dashboard", to: "/dashboard", icon: HeartHandshakeIcon },
   {
-    label: isLoggedIn.value ? "Profil" : "Login",
-    to: isLoggedIn.value ? "/profile" : "/login",
-    icon: isLoggedIn.value ? UserRound : LogIn,
+    label:"Profil",
+    to:"/profile",
+    icon: UserRound,
   },
 ]);
 
