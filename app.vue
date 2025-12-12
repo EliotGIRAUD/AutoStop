@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useRoute } from "#imports";
 
+const route = useRoute();
 const showSplash = ref(true);
 
 onMounted(() => {
@@ -14,7 +16,9 @@ onMounted(() => {
 <template>
   <div class="relative min-h-dvh">
     <NuxtLayout>
-      <NuxtPage />
+      <Transition name="page-fade" mode="out-in">
+        <NuxtPage :key="route.fullPath" />
+      </Transition>
     </NuxtLayout>
 
     <Transition name="fade">
@@ -41,6 +45,16 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
 }
 
 @keyframes progress {
