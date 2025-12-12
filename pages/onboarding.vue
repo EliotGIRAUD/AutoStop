@@ -65,95 +65,109 @@ const skip = () => {
         <button type="button" class="text-base font-semibold text-slate-500" @click="skip">Passer</button>
       </header>
 
-      <div v-if="onboardingStep === 0" class="flex flex-1 flex-col items-center gap-8 pt-4">
-        <img src="/onboarding/Anywhere_you_are_1.svg" alt="Onboarding étape 1" class="w-full max-w-[420px]" />
+      <Transition name="fade-step" mode="out-in">
+        <div v-if="onboardingStep === 0" :key="`step-${onboardingStep}`" class="flex flex-1 flex-col items-center gap-8 pt-4">
+          <img src="/onboarding/Anywhere_you_are_1.svg" alt="Onboarding étape 1" class="w-full max-w-[420px]" />
 
-        <div class="space-y-3 text-center">
-          <h1 class="text-3xl font-black text-slate-900">Où que tu sois</h1>
-          <p class="text-base leading-relaxed text-slate-500">
-            Trouve ou propose un trajet en quelques secondes. Active ta position et découvre qui est prêt à partir près de toi.
-          </p>
+          <div class="space-y-3 text-center">
+            <h1 class="text-3xl font-black text-slate-900">Où que tu sois</h1>
+            <p class="text-base leading-relaxed text-slate-500">
+              Trouve ou propose un trajet en quelques secondes. Active ta position et découvre qui est prêt à partir près de toi.
+            </p>
+          </div>
+
+          <div class="mt-auto flex justify-center pb-6">
+            <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
+              <svg viewBox="0 0 120 120" class="h-full w-full">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="90 360" transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
+                <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div class="mt-auto flex justify-center pb-6">
-          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
-            <svg viewBox="0 0 120 120" class="h-full w-full">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="90 360" transform="rotate(-90 60 60)" />
-              <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
-              <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
+        <div v-else-if="onboardingStep === 1" :key="`step-${onboardingStep}`" class="flex flex-1 flex-col items-center gap-8 pt-4">
+          <img src="/onboarding/At_anytime_2.svg" alt="Onboarding étape 2" class="w-full max-w-[420px]" />
 
-      <div v-else-if="onboardingStep === 1" class="flex flex-1 flex-col items-center gap-8 pt-4">
-        <img src="/onboarding/At_anytime_2.svg" alt="Onboarding étape 2" class="w-full max-w-[420px]" />
+          <div class="space-y-3 text-center">
+            <h1 class="text-3xl font-black text-slate-900">À tout moment</h1>
+            <p class="text-base leading-relaxed text-slate-500">Choisis ton rôle et rends-toi visible quand tu es prêt. Tu peux changer d’avis à tout instant depuis l’appli.</p>
+          </div>
 
-        <div class="space-y-3 text-center">
-          <h1 class="text-3xl font-black text-slate-900">À tout moment</h1>
-          <p class="text-base leading-relaxed text-slate-500">Choisis ton rôle et rends-toi visible quand tu es prêt. Tu peux changer d’avis à tout instant depuis l’appli.</p>
-        </div>
-
-        <div class="mt-auto flex justify-center pb-6">
-          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
-            <svg viewBox="0 0 120 120" class="h-full w-full">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="180 360" transform="rotate(-90 60 60)" />
-              <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
-              <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div v-else-if="onboardingStep === 2" class="flex flex-1 flex-col items-center gap-8 pt-4">
-        <img src="/onboarding/3.svg" alt="Onboarding étape 3" class="w-full max-w-[420px]" />
-
-        <div class="space-y-3 text-center">
-          <h1 class="text-3xl font-black text-slate-900">En route</h1>
-          <p class="text-base leading-relaxed text-slate-500">Planifie ou accepte un trajet en un geste. Reste visible pour les conducteurs tout autour de toi.</p>
+          <div class="mt-auto flex justify-center pb-6">
+            <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
+              <svg viewBox="0 0 120 120" class="h-full w-full">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#fde7d2" stroke-width="8" />
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="8" stroke-linecap="round" stroke-dasharray="180 360" transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
+                <path d="M55 60h14m0 0l-5-5m5 5l-5 5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div class="mt-auto flex justify-center pb-6">
-          <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
-            <svg viewBox="0 0 120 120" class="h-full w-full">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="4" />
-              <circle cx="60" cy="60" r="44" fill="none" stroke="#EB5D1F" stroke-width="4" />
-              <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
-              <text x="60" y="64" text-anchor="middle" fill="white" font-size="20" font-weight="600">Go</text>
-            </svg>
-          </button>
+        <div v-else-if="onboardingStep === 2" :key="`step-${onboardingStep}`" class="flex flex-1 flex-col items-center gap-8 pt-4">
+          <img src="/onboarding/3.svg" alt="Onboarding étape 3" class="w-full max-w-[420px]" />
+
+          <div class="space-y-3 text-center">
+            <h1 class="text-3xl font-black text-slate-900">En route</h1>
+            <p class="text-base leading-relaxed text-slate-500">Planifie ou accepte un trajet en un geste. Reste visible pour les conducteurs tout autour de toi.</p>
+          </div>
+
+          <div class="mt-auto flex justify-center pb-6">
+            <button type="button" class="relative h-24 w-24 transition hover:scale-105 focus:outline-none" @click="nextStep" aria-label="Continuer">
+              <svg viewBox="0 0 120 120" class="h-full w-full">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#EB5D1F" stroke-width="4" />
+                <circle cx="60" cy="60" r="44" fill="none" stroke="#EB5D1F" stroke-width="4" />
+                <circle cx="60" cy="60" r="34" fill="#EB5D1F" />
+                <text x="60" y="64" text-anchor="middle" fill="white" font-size="20" font-weight="600">Go</text>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div v-else-if="onboardingStep === 3" class="flex flex-1 flex-col items-center gap-8 pt-4">
-        <img src="/onboarding/Welcome_Screen_4.svg" alt="Onboarding étape 4" class="w-full max-w-[420px]" />
+        <div v-else-if="onboardingStep === 3" :key="`step-${onboardingStep}`" class="flex flex-1 flex-col items-center gap-8 pt-4">
+          <img src="/onboarding/Welcome_Screen_4.svg" alt="Onboarding étape 4" class="w-full max-w-[420px]" />
 
-        <div class="space-y-3 text-center">
-          <h1 class="text-3xl font-black text-slate-900">Bienvenue à bord</h1>
-          <p class="text-base leading-relaxed text-slate-500">Crée ton compte ou connecte-toi pour rejoindre la communauté PickUp et commencer tes trajets.</p>
+          <div class="space-y-3 text-center">
+            <h1 class="text-3xl font-black text-slate-900">Bienvenue à bord</h1>
+            <p class="text-base leading-relaxed text-slate-500">Crée ton compte ou connecte-toi pour rejoindre la communauté PickUp et commencer tes trajets.</p>
+          </div>
+
+          <div class="mt-auto flex w-full max-w-md flex-col gap-4 pb-8">
+            <button
+              type="button"
+              class="w-full rounded-full bg-[#EB5D1F] px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
+              @click="goToSignup"
+            >
+              Créer un compte
+            </button>
+            <button
+              type="button"
+              class="w-full rounded-full border-2 border-[#EB5D1F] px-6 py-4 text-base font-semibold text-[#EB5D1F] transition hover:bg-orange-50"
+              @click="goToLogin"
+            >
+              Se connecter
+            </button>
+          </div>
         </div>
 
-        <div class="mt-auto flex w-full max-w-md flex-col gap-4 pb-8">
-          <button
-            type="button"
-            class="w-full rounded-full bg-[#EB5D1F] px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:brightness-110"
-            @click="goToSignup"
-          >
-            Créer un compte
-          </button>
-          <button
-            type="button"
-            class="w-full rounded-full border-2 border-[#EB5D1F] px-6 py-4 text-base font-semibold text-[#EB5D1F] transition hover:bg-orange-50"
-            @click="goToLogin"
-          >
-            Se connecter
-          </button>
-        </div>
-      </div>
-
-      <div v-else class="hidden"></div>
+        <div v-else class="hidden" :key="`step-${onboardingStep}`"></div>
+      </Transition>
     </div>
   </section>
 </template>
+
+<style scoped>
+.fade-step-enter-active,
+.fade-step-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.fade-step-enter-from,
+.fade-step-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+</style>
