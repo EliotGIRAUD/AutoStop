@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { LogOut, Lock, ShieldCheck, UserRound } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
 
 definePageMeta({ layout: "default" });
@@ -22,36 +23,28 @@ const goToEdit = () => navigateTo("/profile/1");
     <h1 class="text-center text-2xl font-black">Profil</h1>
 
     <div class="relative overflow-hidden rounded-full bg-[#EB5D1F] px-5 py-4 text-white shadow-lg">
-        <div class="flex items-center gap-4">
-            <div class="h-14 w-14 overflow-hidden rounded-full bg-white/40 backdrop-blur">
-                <img src="/profil/profile.svg" alt="Profil" class="h-full w-full object-contain" />
-            </div>
-            <div class="flex-1">
-                <p class="text-lg font-black truncate">{{ displayName }}</p>
-                <p class="text-sm opacity-90">@{{ displayName.toLowerCase().replaceAll(' ', '') }}</p>
-            </div>
-            <button
-            type="button"
-            class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25"
-            @click="goToEdit"
-            >
-                <span class="text-xl">›</span>
-            </button>
+      <div class="flex items-center gap-4">
+        <div class="h-14 w-14 overflow-hidden rounded-full bg-white/40 backdrop-blur">
+          <img src="/profil/profile.svg" alt="Profil" class="h-full w-full object-contain" />
         </div>
+        <div class="flex-1">
+          <p class="text-lg font-black truncate">{{ displayName }}</p>
+          <p class="text-sm opacity-90">@{{ displayName.toLowerCase().replaceAll(" ", "") }}</p>
+        </div>
+        <button type="button" class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25" @click="goToEdit">
+          <span class="text-xl">›</span>
+        </button>
+      </div>
     </div>
 
     <div class="space-y-4">
       <div class="rounded-2xl border border-slate-100 bg-white shadow-md shadow-slate-200/50">
         <ul class="divide-y divide-slate-100">
           <li>
-            <button
-              type="button"
-              class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50"
-              @click="goToEdit"
-            >
-                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
-                    <img :src="icon('profile.svg')" alt="" class="h-5 w-5" />
-                </span>
+            <button type="button" class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50" @click="goToEdit">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
+                <UserRound class="h-5 w-5" />
+              </span>
               <div class="flex-1">
                 <p class="text-base font-semibold">Mes informations</p>
                 <p class="text-sm text-slate-500">Modifier vos informations</p>
@@ -61,9 +54,9 @@ const goToEdit = () => navigateTo("/profile/1");
           </li>
           <li>
             <div class="flex w-full items-center gap-3 px-4 py-4">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
-                    <img :src="icon('lock.svg')" alt="" class="h-5 w-5" />
-                </span>
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
+                <Lock class="h-5 w-5" />
+              </span>
               <div class="flex-1">
                 <p class="text-base font-semibold">Face ID / Touch ID</p>
                 <p class="text-sm text-slate-500">Gérez la sécurité de votre appareil</p>
@@ -78,9 +71,7 @@ const goToEdit = () => navigateTo("/profile/1");
           </li>
           <li>
             <div class="flex w-full items-center gap-3 px-4 py-4">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10">
-                    <img :src="icon('protect.svg')" alt="" class="h-5 w-5" />
-                </span>
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]"> <ShieldCheck class="h-5 w-5" /> </span>
               <div class="flex-1">
                 <p class="text-base font-semibold">Authentification à deux facteurs</p>
                 <p class="text-sm text-slate-500">Renforcez la sécurité de votre compte</p>
@@ -89,13 +80,9 @@ const goToEdit = () => navigateTo("/profile/1");
             </div>
           </li>
           <li>
-            <button
-              type="button"
-              class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50"
-              @click="navigateTo('/login')"
-            >
+            <button type="button" class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50" @click="navigateTo('/login')">
               <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
-                <img :src="icon('out.svg')" alt="" class="h-5 w-5" />
+                <LogOut class="h-5 w-5" />
               </span>
               <div class="flex-1">
                 <p class="text-base font-semibold text-[#EB5D1F]">Se déconnecter</p>
@@ -112,7 +99,7 @@ const goToEdit = () => navigateTo("/profile/1");
           <li>
             <button type="button" class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50">
               <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
-                <img :src="icon('cloche.svg')" alt="" class="h-5 w-5" />
+                <img :src="icon('cloche.svg')" alt="" />
               </span>
               <div class="flex-1">
                 <p class="text-base font-semibold">Aide & support</p>
@@ -123,7 +110,7 @@ const goToEdit = () => navigateTo("/profile/1");
           <li>
             <button type="button" class="flex w-full items-center gap-3 px-4 py-4 text-left transition hover:bg-slate-50">
               <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#EB5D1F]/10 text-[#EB5D1F]">
-                <img :src="icon('hearth.svg')" alt="" class="h-5 w-5" />
+                <img :src="icon('hearth.svg')" alt="" />
               </span>
               <div class="flex-1">
                 <p class="text-base font-semibold">A propos</p>
@@ -136,4 +123,3 @@ const goToEdit = () => navigateTo("/profile/1");
     </div>
   </section>
 </template>
-

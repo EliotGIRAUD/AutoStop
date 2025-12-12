@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import type { Component } from "vue";
-import { Car, LayoutDashboard, LogIn, MapPinned, ThumbsUp, UserRound } from "lucide-vue-next";
+import { Car, HeartHandshakeIcon, HouseIcon, LayoutDashboard, LogIn, MapPinned, ThumbsUp, UserRound } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
 
 interface NavItem {
@@ -19,8 +19,8 @@ const isLoggedIn = computed(() => auth.isAuthenticated || Boolean(auth.profile.f
 const showStatusSheet = ref(false);
 
 const navItems = computed<NavItem[]>(() => [
-  { label: "Carte", to: "/", icon: MapPinned },
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+  { label: "Carte", to: "/", icon: HouseIcon },
+  { label: "Dashboard", to: "/dashboard", icon: HeartHandshakeIcon },
   {
     label: isLoggedIn.value ? "Profil" : "Login",
     to: isLoggedIn.value ? "/profile" : "/login",

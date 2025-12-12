@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { Bell, ChevronDown, Phone } from "lucide-vue-next";
+import { ChevronDown, Phone, Siren } from "lucide-vue-next";
 import { LngLatBounds } from "mapbox-gl";
 import { useDebounceFn } from "@vueuse/core";
 import usersData from "@/data/users.json";
@@ -42,7 +42,7 @@ const activeDestination = ref<{ label: string; coords: [number, number] } | null
 const isPaused = ref(false);
 
 const config = useRuntimeConfig();
-const mapRef = useMapboxRef("main-map");
+const mapRef = ref<any>(null);
 
 const driverCount = computed(() => users.filter((user) => user.role === "Driver").length);
 const hitchhikerCount = computed(() => users.filter((user) => user.role === "Hitchhiker").length);
@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
     <div>
       <ClientOnly>
         <div class="relative h-[calc(100dvh)] w-full overflow-hidden border border-white/10 bg-slate-900">
-          <MapboxMap v-if="config.public.mapboxToken" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
+          <MapboxMap v-if="config.public.mapboxToken" ref="mapRef" map-id="main-map" class="relative h-full w-full overflow-hidden" :options="mapOptions">
             <div class="absolute left-1/2 top-4 z-20 -translate-x-1/2">
               <div class="relative">
                 <button
@@ -276,13 +276,8 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <div class="absolute right-4 top-4 z-20 flex gap-2">
-              <button
-                type="button"
-                @click="handleEmergencyClick"
-                class="rounded-full bg-white/90 p-2 text-slate-700 shadow-lg ring-1 ring-slate-200 transition hover:bg-white focus:outline-none"
-                aria-label="Notifications"
-              >
-                <Bell class="h-5 w-5" />
+              <button type="button" @click="handleEmergencyClick" class="rounded-full bg-primary-500 p-2 text-slate-700 shadow-lg focus:outline-none" aria-label="Emergency">
+                <Siren class="h-5 w-5" color="white" />
               </button>
             </div>
             <MapboxGeolocateControl position="top-left" :options="{ trackUserLocation: true, showAccuracyCircle: false }" />
